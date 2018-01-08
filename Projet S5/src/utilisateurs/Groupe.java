@@ -1,10 +1,10 @@
 package utilisateurs;
+
 import java.util.LinkedList;
 import java.util.List;
 
 import utilisateurs.Utilisateur;
 import messages.Ticket;
-
 
 public class Groupe {
 
@@ -14,18 +14,18 @@ public class Groupe {
 	private List<Ticket> tickets;
 
 	public Groupe() {
-		
+
 	}
-	
+
 	/**
-	 * @param iD
+	 * @param id
 	 * @param nom
 	 */
 	public Groupe(int id, String nom) {
 		super();
 		this.id = id;
 		this.nom = nom;
-		this.membres = new LinkedList<Utilisateur>(); 
+		this.membres = new LinkedList<Utilisateur>();
 		this.tickets = new LinkedList<Ticket>();
 	}
 
@@ -37,6 +37,14 @@ public class Groupe {
 	}
 
 	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
 	 * @return the nom
 	 */
 	public String getNom() {
@@ -44,27 +52,61 @@ public class Groupe {
 	}
 
 	/**
-	 * @param id the id to set
-	 */
-	public void setid(int id) {
-		this.id = id;
-	}
-
-	/**
-	 * @param nom the nom to set
+	 * @param nom
+	 *            the nom to set
 	 */
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
 
-	public void addMembres(Utilisateur ...utilisateurs) {
-		for(Utilisateur u : utilisateurs)
+	/**
+	 * @return the membres
+	 */
+	public List<Utilisateur> getMembres() {
+		return membres;
+	}
+
+	/**
+	 * @param membres
+	 *            the membres to set
+	 */
+	public void setMembres(List<Utilisateur> membres) {
+		this.membres = membres;
+	}
+
+	/**
+	 * @return the tickets
+	 */
+	public List<Ticket> getTickets() {
+		return tickets;
+	}
+
+	/**
+	 * @param tickets
+	 *            the tickets to set
+	 */
+	public void setTickets(List<Ticket> tickets) {
+		this.tickets = tickets;
+	}
+
+	public void addMembres(Utilisateur... utilisateurs) {
+		for (Utilisateur u : utilisateurs)
 			this.membres.add(u);
 	}
 
-	public void removeMembres(Utilisateur ...utilisateurs) {
-		for(Utilisateur u : utilisateurs)
+	public void removeMembres(Utilisateur... utilisateurs) {
+		for (Utilisateur u : utilisateurs)
 			this.membres.remove(u);
+	}
+	
+	public void addTicket(Ticket... tickets) {
+		for (Ticket t : tickets)
+			this.tickets.add(t);
+	}
+
+	public void removeTicket(Ticket... tickets) {
+		for (Ticket t : tickets)
+			this.tickets.remove(t);
 	}
 
 	public void creerTicket(String titre, String corps, Utilisateur auteur) {

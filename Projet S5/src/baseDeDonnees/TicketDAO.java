@@ -66,14 +66,18 @@ public class TicketDAO extends DAO<Ticket> {
 	public Ticket find(int id) {
 		Ticket ticket = new Ticket();
 		UtilisateurDAO utilisateurDAO = new UtilisateurDAO(connect);
+		MessageDAO messageDAO = new MessageDAO(connect);
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery("SELECT * FROM Ticket WHERE tic_id = " + id);
-			if (result.next()) {
+			if (result.next())
 				ticket = new Ticket(id, result.getString("tic_titre"), utilisateurDAO.find(result.getInt("tic_auteur")));
-				utilisateurDAO.find(result.getInt(2)).addTicket(ticket);
-			}	
+			result = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery("SELECT * FROM Message WHERE msg_ticket = " + id);
+			while (result.next())
+				ticket.addMessage(messageDAO.find(result.getInt("msg_id")));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -18,11 +18,12 @@ public class Utilisateur {
 	private String prenom;
 	private String identifiant;
 	private String motDePasse;
-	private List<Ticket> tickets = new LinkedList<>();	
+	private List<Ticket> tickets = new LinkedList<>();
+
 	public Utilisateur() {
-		
+
 	}
-	
+
 	/**
 	 * @param id
 	 * @param nom
@@ -46,7 +47,8 @@ public class Utilisateur {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -60,7 +62,8 @@ public class Utilisateur {
 	}
 
 	/**
-	 * @param nom the nom to set
+	 * @param nom
+	 *            the nom to set
 	 */
 	public void setNom(String nom) {
 		this.nom = nom;
@@ -74,7 +77,8 @@ public class Utilisateur {
 	}
 
 	/**
-	 * @param prenom the prenom to set
+	 * @param prenom
+	 *            the prenom to set
 	 */
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
@@ -88,7 +92,8 @@ public class Utilisateur {
 	}
 
 	/**
-	 * @param identifiant the identifiant to set
+	 * @param identifiant
+	 *            the identifiant to set
 	 */
 	public void setIdentifiant(String identifiant) {
 		this.identifiant = identifiant;
@@ -102,15 +107,33 @@ public class Utilisateur {
 	}
 
 	/**
-	 * @param motDePasse the motDePasse to set
+	 * @param motDePasse
+	 *            the motDePasse to set
 	 */
 	public void setMotDePasse(String motDePasse) {
 		this.motDePasse = motDePasse;
 	}
-	
-	public void addTicket(Ticket ticket) {
-		
+
+	/**
+	 * @return the tickets
+	 */
+	public List<Ticket> getTickets() {
+		return tickets;
 	}
-	
-	
+
+	/**
+	 * @param tickets
+	 *            the tickets to set
+	 */
+	public void setTickets(List<Ticket> tickets) {
+		this.tickets = tickets;
+	}
+
+	public void addTicket(Ticket ticket) {
+		this.tickets.add(ticket);
+	}
+
+	public void removeTicket(Ticket ticket) {
+		this.tickets.remove(ticket);
+	}
 }

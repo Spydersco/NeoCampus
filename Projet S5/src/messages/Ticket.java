@@ -1,4 +1,5 @@
 package messages;
+
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,9 +15,10 @@ public class Ticket {
 	private Groupe groupe;
 	private List<Message> messages;
 
-	public Ticket () {
-		
+	public Ticket() {
+
 	}
+
 	/**
 	 * @param id
 	 * @param titre
@@ -88,6 +90,29 @@ public class Ticket {
 	 */
 	public void setGroupe(Groupe groupe) {
 		this.groupe = groupe;
+	}
+
+	/**
+	 * @return the messages
+	 */
+	public List<Message> getMessages() {
+		return messages;
+	}
+
+	/**
+	 * @param messages
+	 *            the messages to set
+	 */
+	public void setMessages(List<Message> messages) {
+		this.messages = messages;
+	}
+	
+	public void addMessage(Message message) {
+		this.messages.add(message);
+	}
+	
+	public void removeMessage(Message message) {
+		this.messages.remove(message);
 	}
 
 	public void creerMessage(String corps, Utilisateur auteur) {

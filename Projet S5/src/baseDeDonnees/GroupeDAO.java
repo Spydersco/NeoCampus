@@ -58,6 +58,7 @@ public class GroupeDAO extends DAO<Groupe>{
 	public Groupe find(int id) {
 		Groupe groupe = new Groupe();
 		UtilisateurDAO utilisateurDAO = new UtilisateurDAO(connect);
+		TicketDAO ticketDAO = new TicketDAO(connect);
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
@@ -67,8 +68,13 @@ public class GroupeDAO extends DAO<Groupe>{
 			result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery("SELECT * FROM Appartenir WHERE grp_id = " + id);
-			if (result.next())
-				groupe.addMembres(utilisateurDAO.find(result.getInt(1)));
+			while (result.next())
+				groupe.addMembres(utilisateurDAO.find(result.getInt("uti_id")));
+			result = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery("SELECT * FROM Ticket WHERE tic_groupe = " + id);
+			while (result.next())
+				groupe.addTicket(ticketDAO.find(result.getInt("tic_id")));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

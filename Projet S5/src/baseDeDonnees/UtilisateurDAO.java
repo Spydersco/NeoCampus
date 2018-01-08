@@ -15,7 +15,7 @@ import utilisateurs.Utilisateur;
  *
  */
 public class UtilisateurDAO extends DAO<Utilisateur> {
-	
+
 	/**
 	 * @param conn
 	 */
@@ -37,7 +37,7 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 			prepare.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 			res.updateString(5, obj.getMotDePasse());
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
 
 	@Override
@@ -74,8 +74,14 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery("SELECT * FROM utilisateur WHERE uti_id = " + id);
-			if (result.next())
-				utilisateur = new Utilisateur(id, result.getString("uti_nom"), result.getString("uti_prenom"), result.getString("uti_identifiant"), result.getString("uti_motDePasse"));
+			if (result.next()) {
+				utilisateur = new Utilisateur(id, result.getString("uti_nom"), result.getString("uti_prenom"),
+						result.getString("uti_identifiant"), result.getString("uti_motDePasse"));
+				result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+						.executeQuery("SELECT * FROM Ticket" +
+										"WHERE tic_auteur = " + id +
+										"OR WHERE tic ");
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

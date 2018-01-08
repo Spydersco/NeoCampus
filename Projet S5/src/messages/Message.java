@@ -1,5 +1,4 @@
 package messages;
-import java.util.Date;
 
 import utilisateurs.Utilisateur;
 
@@ -10,9 +9,9 @@ public class Message {
 	private String date;
 	private Utilisateur auteur;
 	private StatutMessage etat;
-	
-	public Message () {
-		
+
+	public Message() {
+
 	}
 
 	/**
@@ -29,7 +28,6 @@ public class Message {
 		this.auteur = auteur;
 	}
 
-
 	public void afficherMessage() {
 		System.out.println(this.corps);
 	}
@@ -42,7 +40,8 @@ public class Message {
 	}
 
 	/**
-	 * @param id the id to set
+	 * @param id
+	 *            the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -56,7 +55,8 @@ public class Message {
 	}
 
 	/**
-	 * @param corps the corps to set
+	 * @param corps
+	 *            the corps to set
 	 */
 	public void setCorps(String corps) {
 		this.corps = corps;
@@ -70,7 +70,8 @@ public class Message {
 	}
 
 	/**
-	 * @param date the date to set
+	 * @param date
+	 *            the date to set
 	 */
 	public void setDate(String date) {
 		this.date = date;
@@ -84,7 +85,8 @@ public class Message {
 	}
 
 	/**
-	 * @param auteur the auteur to set
+	 * @param auteur
+	 *            the auteur to set
 	 */
 	public void setAuteur(Utilisateur auteur) {
 		this.auteur = auteur;
@@ -98,7 +100,8 @@ public class Message {
 	}
 
 	/**
-	 * @param etat the etat to set
+	 * @param etat
+	 *            the etat to set
 	 */
 	public void setEtat(StatutMessage etat) {
 		this.etat = etat;
