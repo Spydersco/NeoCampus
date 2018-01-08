@@ -38,15 +38,7 @@ public class SocketClient {
 	}
 
 	public void demandeCreationTicket(Groupe grp, String titre, String premierMessage, Utilisateur auteur) {
-		grp.creerTicket(titre, premierMessage, auteur); 
-	
-		try {
-			oos.writeObject(ticket);
-			oos.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 
 	public void envoiMessage(String corps) {
