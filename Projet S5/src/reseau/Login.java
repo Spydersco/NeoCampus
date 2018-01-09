@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 
@@ -22,14 +21,18 @@ public class Login implements Runnable{
 		this.connect = connect;
 	}
 
-	@Override
 	public void run() {
 		
 		try {
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			out = new PrintWriter(socket.getOutputStream());
 			
-			String login = in.readLine();
+			out.println("Entrez votre login :");
+			out.flush();
+			int login = in.read();
+
+			out.println("Entrez votre mdp :");
+			out.flush();
 			String mdp = in.readLine();
 
 			out.println(verifierIdentifiants(login, mdp));
@@ -41,9 +44,10 @@ public class Login implements Runnable{
 		
 	}
 
-	public boolean verifierIdentifiants(String id, String mdp) {
+	public boolean verifierIdentifiants(int id, String mdp) {
 		UtilisateurDAO ut = new UtilisateurDAO(connect);
-		return ut.find(id).getMotDePasse() == mdp;
+		return true;
+		//return ut.find(id).getMotDePasse() == mdp;
 	}
 
 }

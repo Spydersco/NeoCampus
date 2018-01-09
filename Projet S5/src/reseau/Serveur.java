@@ -1,22 +1,21 @@
 package reseau;
 
 import java.io.IOException;
-import java.net.ServerSocket;
+import java.net.*;
 import java.sql.Connection;
 
 public class Serveur {
 
-	public static void main(String[] zero) {
+	public static void main(String[] args) {
 
 		ServerSocket socket;
-		Connection connect;
+		Connection connect = null;
 
 		try {
 			socket = new ServerSocket(9999);
-			Thread t = new Thread(new AccepterConnexion(socket, connect));
-			t.start();
 		} 
 		catch (IOException e) {
+			System.out.println("toto");
 			e.printStackTrace();
 		}
 	}
