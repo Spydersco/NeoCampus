@@ -16,7 +16,6 @@ public class Utilisateur {
 	private int id;
 	private String nom;
 	private String prenom;
-	private String identifiant;
 	private String motDePasse;
 	private List<Ticket> tickets = new LinkedList<>();
 
@@ -28,14 +27,12 @@ public class Utilisateur {
 	 * @param id
 	 * @param nom
 	 * @param prenom
-	 * @param identifiant
 	 * @param motDePasse
 	 */
-	public Utilisateur(int id, String nom, String prenom, String identifiant, String motDePasse) {
+	public Utilisateur(int id, String nom, String prenom, String motDePasse) {
 		this.id = id;
 		this.nom = nom;
 		this.prenom = prenom;
-		this.identifiant = identifiant;
 		this.motDePasse = motDePasse;
 	}
 
@@ -83,22 +80,7 @@ public class Utilisateur {
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
 	}
-
-	/**
-	 * @return the identifiant
-	 */
-	public String getIdentifiant() {
-		return identifiant;
-	}
-
-	/**
-	 * @param identifiant
-	 *            the identifiant to set
-	 */
-	public void setIdentifiant(String identifiant) {
-		this.identifiant = identifiant;
-	}
-
+	
 	/**
 	 * @return the motDePasse
 	 */
