@@ -17,3 +17,5 @@ jboss/server/minimal/work/**/*
 # deployed package files #
 
 *.DEPLOYED
+Projet S5/.classpath
+Projet S5/.project
