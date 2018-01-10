@@ -107,12 +107,14 @@ public class Ticket {
 		this.messages = messages;
 	}
 	
-	public void addMessage(Message message) {
-		this.messages.add(message);
+	public void addMessage(Message... messages) {
+		for (Message msg : messages)
+			this.messages.add(msg);
 	}
 	
-	public void removeMessage(Message message) {
-		this.messages.remove(message);
+	public void removeMessage(Message... messages) {
+		for (Message msg : messages)
+			this.messages.remove(msg);
 	}
 
 	public void creerMessage(String corps, Utilisateur auteur) {

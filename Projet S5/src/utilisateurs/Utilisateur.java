@@ -111,11 +111,13 @@ public class Utilisateur {
 		this.tickets = tickets;
 	}
 
-	public void addTicket(Ticket ticket) {
-		this.tickets.add(ticket);
+	public void addTicket(Ticket... tickets) {
+		for (Ticket ticket : tickets)
+			this.tickets.add(ticket);
 	}
 
-	public void removeTicket(Ticket ticket) {
-		this.tickets.remove(ticket);
+	public void removeTicket(Ticket... tickets) {
+		for (Ticket ticket : tickets)
+			this.tickets.remove(ticket);
 	}
 }

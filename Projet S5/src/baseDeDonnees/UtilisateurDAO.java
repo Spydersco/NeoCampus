@@ -75,12 +75,12 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 			if (result.next()) {
 				utilisateur = new Utilisateur(id, result.getString("uti_nom"), result.getString("uti_prenom"),
 						result.getString("uti_motDePasse"));
+			}
 			result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeQuery("SELECT * FROM Ticket WHERE tic_auteur = " + id);
-			//TODO Recupérer les ticekts des groupes auxquels appartient l'utilisateur
+					.executeQuery("SELECT * FROM Ticket INNER JOIN Appartenir ON Ticket.tic_groupe = Appartenir.grp_id");
+			// TODO Recupérer les ticekts des groupes auxquels appartient l'utilisateur
 			while (result.next())
 				utilisateur.addTicket(ticketDAO.find(result.getInt("tic_id")));
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

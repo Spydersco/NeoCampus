@@ -3,10 +3,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import baseDeDonnees.GroupeDAO;
+import baseDeDonnees.MessageDAO;
+import baseDeDonnees.TicketDAO;
 import baseDeDonnees.UtilisateurDAO;
-import utilisateurs.Groupe;
-import utilisateurs.Utilisateur;
+import messages.Message;
+import messages.StatutMessage;
+
 
 /**
  * 
@@ -34,20 +36,18 @@ public class Test {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		GroupeDAO groupeDAO = new GroupeDAO(connexion);
-		groupeDAO.create(new Groupe(1, "groupe1"));
-		Groupe groupe = groupeDAO.find(1);
-		System.out.println(groupe.getNom());
-		groupeDAO.delete(groupe);
+
 		UtilisateurDAO utilisateurDAO = new UtilisateurDAO(connexion);
-		utilisateurDAO.create(new Utilisateur(1, "Netflix", "Sebastien", "azerty"));
-		Utilisateur utilisateur = utilisateurDAO.find(1);
-		System.out.println(utilisateur.getNom());
+		TicketDAO ticketDAO = new TicketDAO(connexion);
+		
+		MessageDAO messageDAO = new MessageDAO(connexion);
+		messageDAO.create(new Message(1, "abc", "10/01/2018 00:13", StatutMessage.PAS_RECU_SERVEUR, utilisateurDAO.find(1), ticketDAO.find(1)));
+		messageDAO.create(new Message(2, "abcdef", "10/01/2018 00:15", StatutMessage.PAS_RECU_SERVEUR, utilisateurDAO.find(2), ticketDAO.find(1)));
+		messageDAO.create(new Message(3, "abcdefgh", "10/01/2018 00:18", StatutMessage.PAS_RECU_SERVEUR, utilisateurDAO.find(1), ticketDAO.find(1)));
 		
 		Statement statement = connexion.createStatement();
 		statement.executeQuery("SHUTDOWN");
 		statement.close();
-		
-	}
 
+	}
 }

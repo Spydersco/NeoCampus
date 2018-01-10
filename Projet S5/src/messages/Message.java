@@ -9,6 +9,7 @@ public class Message {
 	private String date;
 	private Utilisateur auteur;
 	private StatutMessage etat;
+	private Ticket ticket;
 
 	public Message() {
 
@@ -19,13 +20,15 @@ public class Message {
 	 * @param corps
 	 * @param date
 	 * @param auteur
+	 * @param ticket
 	 */
-	public Message(int id, String corps, String date, StatutMessage etat, Utilisateur auteur) {
+	public Message(int id, String corps, String date, StatutMessage etat, Utilisateur auteur, Ticket ticket) {
 		super();
 		this.id = id;
 		this.corps = corps;
 		this.date = date;
 		this.auteur = auteur;
+		this.ticket = ticket;
 	}
 
 	public void afficherMessage() {
@@ -107,4 +110,18 @@ public class Message {
 		this.etat = etat;
 	}
 
+	/**
+	 * @return the ticket
+	 */
+	public Ticket getTicket() {
+		return ticket;
+	}
+
+	/**
+	 * @param ticket the ticket to set
+	 */
+	public void setTicket(Ticket ticket) {
+		this.ticket = ticket;
+	}
+	
 }

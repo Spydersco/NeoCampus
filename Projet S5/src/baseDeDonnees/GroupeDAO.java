@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import utilisateurs.Groupe;
+import utilisateurs.Utilisateur;
 
 public class GroupeDAO extends DAO<Groupe> {
 
@@ -25,6 +26,13 @@ public class GroupeDAO extends DAO<Groupe> {
 			prepare.setInt(1, obj.getId());
 			prepare.setString(2, obj.getNom());
 			prepare.executeUpdate();
+			for(Utilisateur membre : obj.getMembres()) {
+				prepare = this.connect
+					.prepareStatement("INSERT INTO Appartenir (grp_id, uti_id) VALUES(?, ?)");
+				prepare.setInt(1, obj.getId());
+				prepare.setInt(2, membre.getId());
+				prepare.executeUpdate();
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -49,6 +57,13 @@ public class GroupeDAO extends DAO<Groupe> {
 			res.updateInt(1, obj.getId());
 			res.updateString(2, obj.getNom());
 			res.updateRow();
+			for(Utilisateur membre : obj.getMembres()) {
+				res = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery("INSERT INTO Appartenir (grp_id, uti_id) VALUES(?, ?)");
+				res.updateInt(1, obj.getId());
+				res.updateInt(2, membre.getId());
+				res.updateRow();
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
