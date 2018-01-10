@@ -3,7 +3,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
 /**
  * @author Damien
  *
@@ -27,8 +26,8 @@ public class Test {
 			e.printStackTrace();
 		}
 
-		Statement statement = connexion.createStatement() ;
-		
+		Statement statement = connexion.createStatement();
+
 		statement.executeQuery("SHUTDOWN");
 		statement.close();
 

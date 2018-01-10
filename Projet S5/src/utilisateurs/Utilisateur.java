@@ -18,6 +18,7 @@ public class Utilisateur {
 	private String prenom;
 	private String motDePasse;
 	private List<Ticket> tickets = new LinkedList<>();
+	private List<Groupe> groupes = new LinkedList<>();
 
 	public Utilisateur() {
 
@@ -120,4 +121,30 @@ public class Utilisateur {
 		for (Ticket ticket : tickets)
 			this.tickets.remove(ticket);
 	}
+
+	/**
+	 * @return the groupes
+	 */
+	public List<Groupe> getGroupes() {
+		return groupes;
+	}
+
+	/**
+	 * @param groupes the groupes to set
+	 */
+	public void setGroupes(List<Groupe> groupes) {
+		this.groupes = groupes;
+	}
+	
+	public void addGroupe(Groupe... groupes) {
+		for (Groupe groupe : groupes)
+			this.groupes.add(groupe);
+	}
+
+	public void removeGroupe(Groupe... groupes) {
+		for (Groupe groupe : groupes)
+			this.groupes.remove(groupe);
+	}
+	
+	
 }

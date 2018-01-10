@@ -42,7 +42,7 @@ public class TicketDAO extends DAO<Ticket> {
 	public void delete(Ticket obj) {
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
-					.executeUpdate("DELETE FROM Ticket tic_id = " + obj.getId());
+					.executeUpdate("DELETE FROM Ticket WHERE tic_id = " + obj.getId());
 
 		} catch (SQLException e) {
 			e.printStackTrace();
