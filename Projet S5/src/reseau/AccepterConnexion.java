@@ -22,6 +22,7 @@ public class AccepterConnexion implements Runnable{
 
 		try {
 			while (true) {
+				System.out.println("toto");
 				socket = socketserver.accept();
 				System.out.println("Un client veut se connecter  ");
 				t1 = new Thread(new Login(socket, connect));

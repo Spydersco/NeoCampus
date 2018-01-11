@@ -3,17 +3,18 @@ package reseau;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.sql.Connection;
 
 import baseDeDonnees.UtilisateurDAO;
+import messages.Ticket;
 
 public class Login implements Runnable{
 
 	private Socket socket = null;
-	private PrintWriter out = null;
-	private BufferedReader in = null;
 	private Connection connect;
 
 	public Login(Socket s, Connection connect) {
@@ -24,20 +25,28 @@ public class Login implements Runnable{
 	public void run() {
 		
 		try {
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			out = new PrintWriter(socket.getOutputStream());
-			
-			out.println("Entrez votre login :");
-			out.flush();
-			int login = in.read();
-
-			out.println("Entrez votre mdp :");
-			out.flush();
-			String mdp = in.readLine();
-
-			out.println(verifierIdentifiants(login, mdp));
+//			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+//			PrintWriter out = new PrintWriter(socket.getOutputStream());
+//			
+//			out.println("Entrez votre login :");
+//			out.flush();
+//			in.skip(4);
+//			int login = Integer.parseInt(in.readLine());
+//
+//			out.println("Entrez votre mdp :");
+//			out.flush();
+//			String mdp = in.readLine();
+//
+//			System.out.println(mdp);
+//			out.println(verifierIdentifiants(login, mdp));
+//			out.flush();
+	
+			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+			Integer s = (Integer) ois.readObject();
+			ois.close();
 		} 
-		catch (IOException e) {
+		catch (IOException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -46,8 +55,7 @@ public class Login implements Runnable{
 
 	public boolean verifierIdentifiants(int id, String mdp) {
 		UtilisateurDAO ut = new UtilisateurDAO(connect);
-		return true;
-		//return ut.find(id).getMotDePasse() == mdp;
+		return ut != null && ut.find(id).getMotDePasse().equals(mdp);
 	}
 
 }

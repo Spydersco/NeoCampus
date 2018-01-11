@@ -1,56 +1,59 @@
 package reseau;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
-
+import java.net.UnknownHostException;
+import messages.Message;
+import messages.StatutMessage;
+import messages.Ticket;
 import utilisateurs.Groupe;
 import utilisateurs.Utilisateur;
 
 public class SocketClient {
 
+	private Socket soc;
+	private ObjectOutputStream oos = null;
+
+	public SocketClient () {
+		try {
+			this.soc = new Socket("localHost", 2018);
+			this.oos = new ObjectOutputStream(soc.getOutputStream());
+		} catch (UnknownHostException e) {
+			System.err.println("Connexion impossible à l'adresse " + soc.getLocalAddress());
+		} catch (IOException e) {
+			System.err.println("Aucun serveur à l'écoute du port "+ soc.getLocalPort());
+		}
+	}
+
+	/**
+	 * @return the soc
+	 */
+	public Socket getSoc() {
+		return soc;
+	}
 
 	public void demandeCreationTicket(Groupe grp, String titre, String premierMessage, Utilisateur auteur) {
-
-	}
-
-	public void envoiMessage(String corps) {
-
-	}
-	
-	public static void main(String[] zero) {
-		Socket soc;
-		ObjectOutputStream oos;
-		OutputStream os;
-		PrintWriter out = null;
-		BufferedReader in = null;
+		Ticket leTicket = new Ticket(0, titre, auteur);
+		leTicket.creerMessage(premierMessage, auteur);
 		try {
-			soc.connect(soc.getLocalSocketAddress());
-			out = new PrintWriter(soc.getOutputStream());
-			in = new BufferedReader(new InputStreamReader(soc.getInputStream()));
+			oos.writeObject(leTicket);
+			oos.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
 
-		Scanner sc = new Scanner(System.in);
-		System.out.println(in.readLine());
-
-		int login = sc.nextInt();
-		out.println(login);
-		out.flush();
-
-		System.out.println(in.readLine());
-		String pass = sc.nextLine();
-		out.println(pass);
-		out.flush();
-
-		if(in.readLine().equals("true"))
-			System.out.println("connecté");
+	public void envoiMessage(String corps, Ticket ticket, Utilisateur auteur) {
+		Message leMessage = new Message(0, corps, "", StatutMessage.PAS_RECU_SERVEUR, auteur);
+		try {
+			oos.writeObject("salut a tous les amis");
+			oos.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }
