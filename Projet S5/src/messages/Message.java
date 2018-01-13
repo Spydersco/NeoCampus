@@ -8,7 +8,6 @@ public class Message {
 	private String corps;
 	private String date;
 	private Utilisateur auteur;
-	private StatutMessage etat;
 
 	public Message() {
 
@@ -20,13 +19,12 @@ public class Message {
 	 * @param date
 	 * @param auteur
 	 */
-	public Message(int id, String corps, String date, StatutMessage etat, Utilisateur auteur) {
+	public Message(int id, String corps, String date, Utilisateur auteur) {
 		super();
 		this.id = id;
 		this.corps = corps;
 		this.date = date;
 		this.auteur = auteur;
-		this.etat = etat;
 	}
 
 	public void afficherMessage() {
@@ -93,19 +91,4 @@ public class Message {
 		this.auteur = auteur;
 	}
 
-	/**
-	 * @return the etat
-	 */
-	public StatutMessage getEtat() {
-		return etat;
-	}
-
-	/**
-	 * @param etat
-	 *            the etat to set
-	 */
-	public void setEtat(StatutMessage etat) {
-		this.etat = etat;
-	}
-	
 }

@@ -27,7 +27,7 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 	public void create(Utilisateur obj) {
 		try {
 			PreparedStatement prepare = this.connect.prepareStatement(
-					"INSERT INTO utilisateur (uti_id, uti_nom, uti_prenom, uti_motDePasse) VALUES(?, ?, ?, ?)");
+					"INSERT INTO Utilisateur (uti_id, uti_nom, uti_prenom, uti_motDePasse) VALUES(?, ?, ?, ?)");
 
 			prepare.setInt(1, obj.getId());
 			prepare.setString(2, obj.getNom());
@@ -43,8 +43,16 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 	public void delete(Utilisateur obj) {
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
-					.executeUpdate("DELETE FROM Utillisateur uti_id = " + obj.getId());
-
+			.executeQuery("DELETE FROM Ticket WHERE tic_auteur = " + obj.getId());
+			
+			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
+			.executeQuery("DELETE FROM Message WHERE msg_auteur = " + obj.getId());
+						
+			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
+			.executeQuery("DELETE FROM Appartenir WHERE uti_id = " + obj.getId());
+			
+			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
+					.executeUpdate("DELETE FROM Utilisateur WHERE uti_id = " + obj.getId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -59,6 +67,7 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 			res.updateString(2, obj.getNom());
 			res.updateString(3, obj.getPrenom());
 			res.updateString(5, obj.getMotDePasse());
+			res.updateRow();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -68,6 +77,7 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 	public Utilisateur find(int id) {
 		Utilisateur utilisateur = new Utilisateur();
 		TicketDAO ticketDAO = new TicketDAO(connect);
+		GroupeDAO groupeDAO = new GroupeDAO(connect);
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
@@ -78,9 +88,12 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 			}
 			result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery("SELECT * FROM Ticket INNER JOIN Appartenir ON Ticket.tic_groupe = Appartenir.grp_id");
-			// TODO Recupérer les ticekts des groupes auxquels appartient l'utilisateur
 			while (result.next())
 				utilisateur.addTicket(ticketDAO.find(result.getInt("tic_id")));
+			result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery("SELECT * FROM Appartenir WHERE uti_id=" + id);
+			while (result.next())
+				utilisateur.addGroupe(groupeDAO.find(result.getInt("grp_id")));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -119,7 +119,7 @@ public class Ticket {
 
 	public void creerMessage(String corps, Utilisateur auteur) {
 		Date date = new Date(System.currentTimeMillis());
-		Message monMessage = new Message(0, corps, date.toString(), StatutMessage.PAS_RECU_SERVEUR, auteur);
+		Message monMessage = new Message(0, corps, date.toString(), auteur);
 		messages.add(monMessage);
 	}
 
