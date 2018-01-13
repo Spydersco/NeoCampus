@@ -24,12 +24,14 @@ public class Ticket {
 	 * @param id
 	 * @param titre
 	 * @param idAuteur
+	 * @param idGroupe
 	 */
-	public Ticket(int id, String titre, int idAuteur) {
+	public Ticket(int id, String titre, int idAuteur, int idGroupe) {
 		super();
 		this.id = id;
 		this.titre = titre;
 		this.idAuteur = idAuteur;
+		this.idGroupe = idGroupe;
 		this.messages = new LinkedList<Message>();
 	}
 
