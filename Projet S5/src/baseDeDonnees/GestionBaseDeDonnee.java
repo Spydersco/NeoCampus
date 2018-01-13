@@ -81,4 +81,56 @@ public class GestionBaseDeDonnee {
 			e.printStackTrace();
 		}
 	}
+	
+	public int idGroupeSuivant () {
+		try {
+			ResultSet res = connect.createStatement().executeQuery("SELECT * FROM Groupe");
+			int compteur = 1;
+			while(res.next())
+				compteur++;
+			return compteur;
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	
+	public int idMessageSuivant () {
+		try {
+			ResultSet res = connect.createStatement().executeQuery("SELECT * FROM Message");
+			int compteur = 1;
+			while(res.next())
+				compteur++;
+			return compteur;
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+		
+	public int idTicketSuivant () {
+		try {
+			ResultSet res = connect.createStatement().executeQuery("SELECT * FROM Ticket");
+			int compteur = 1;
+			while(res.next())
+				compteur++;
+			return compteur;
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+	
+	public int idUtilisateurSuivant () {
+		try {
+			ResultSet res = connect.createStatement().executeQuery("SELECT * FROM Utilisateur");
+			int compteur = 1;
+			while(res.next())
+				compteur++;
+			return compteur;
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
 }
