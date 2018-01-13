@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import messages.Message;
+import messages.StatutMessage;
 
 /**
  * @author Damien
@@ -27,12 +28,14 @@ public class MessageDAO extends DAO<Message> {
 	public void create(Message obj) {
 		try {
 			PreparedStatement prepare = this.connect.prepareStatement(
-					"INSERT INTO Message (msg_id, msg_corps, msg_date, msg_auteur) VALUES(?, ?, ?, ?)");
+					"INSERT INTO Message (msg_id, msg_corps, msg_date, msg_auteur, msg_statut, msg_ticket) VALUES(?, ?, ?, ?, ?, ?)");
 
 			prepare.setInt(1, obj.getId());
 			prepare.setString(2, obj.getCorps());
 			prepare.setString(3, obj.getDate());
 			prepare.setInt(4, obj.getAuteur().getId());
+			prepare.setString(5, obj.getStatut().name());
+			prepare.setInt(6, obj.getIdTicket());
 			prepare.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -54,11 +57,12 @@ public class MessageDAO extends DAO<Message> {
 	public void update(Message obj) {
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
-					.executeUpdate("UPDATE Message "
-							+ "SET msg_id = '" + obj.getId() + "', " 
+					.executeUpdate("UPDATE Message SET "
 							+ "msg_corps = '" + obj.getCorps() + "', "
 							+ "msg_date = '" + obj.getDate() + "', " 
-							+ "msg_auteur = '" + obj.getAuteur().getId() + "' " 
+							+ "msg_auteur = '" + obj.getAuteur().getId() + "', "
+							+ "msg_statut = '" + obj.getStatut().name() + "', "
+							+ "msg_idTicket = '" + obj.getIdTicket() + "', "
 							+ "WHERE msg_id = " + obj.getId());
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -75,7 +79,7 @@ public class MessageDAO extends DAO<Message> {
 					.executeQuery("SELECT * FROM Message WHERE msg_id = " + id);
 			if (result.next())
 				message = new Message(id, result.getString("msg_corps"), result.getString("msg_date"),
-						utilisateurDAO.find(result.getInt("msg_auteur")));
+						utilisateurDAO.find(result.getInt("msg_auteur")), StatutMessage.valueOf(result.getString("msg_statut")), result.getInt("msg_ticket"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

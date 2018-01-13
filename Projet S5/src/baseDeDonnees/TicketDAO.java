@@ -27,11 +27,11 @@ public class TicketDAO extends DAO<Ticket> {
 	public void create(Ticket obj) {
 		try {
 			PreparedStatement prepare = this.connect.prepareStatement(
-					"INSERT INTO ticket (tic_id, tic_titre, tic_auteur, tic_groupe) VALUES(?, ?, ?, ?)");
+					"INSERT INTO ticket (tic_id, tic_titre, tic_groupe) VALUES(?, ?)");
 
 			prepare.setInt(1, obj.getId());
 			prepare.setString(2, obj.getTitre());
-			prepare.setInt(3, obj.getAuteur().getId());
+			prepare.setInt(3, obj.getIdGroupe());
 			prepare.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -56,7 +56,7 @@ public class TicketDAO extends DAO<Ticket> {
 					.executeQuery("SELECT * FROM Ticket WHERE tic_id = " + obj.getId());
 			res.updateInt(1, obj.getId());
 			res.updateString(2, obj.getTitre());
-			res.updateInt(3, obj.getAuteur().getId());
+			res.updateInt(3, obj.getIdGroupe());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
@@ -65,14 +65,13 @@ public class TicketDAO extends DAO<Ticket> {
 	@Override
 	public Ticket find(int id) {
 		Ticket ticket = new Ticket();
-		UtilisateurDAO utilisateurDAO = new UtilisateurDAO(connect);
 		MessageDAO messageDAO = new MessageDAO(connect);
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery("SELECT * FROM Ticket WHERE tic_id = " + id);
 			if (result.next())
-				ticket = new Ticket(id, result.getString("tic_titre"), utilisateurDAO.find(result.getInt("tic_auteur")));
+				ticket = new Ticket(id, result.getString("tic_titre"), result.getInt("tic_groupe"));
 			result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery("SELECT * FROM Message WHERE msg_ticket = " + id);

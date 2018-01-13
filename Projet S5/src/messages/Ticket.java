@@ -1,5 +1,6 @@
 package messages;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,18 +10,10 @@ import utilisateurs.*;
 
 public class Ticket {
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Ticket " + id + "," + titre + "," + auteur + "," + groupe;
-	}
-
 	private int id;
 	private String titre;
-	private Utilisateur auteur;
-	private Groupe groupe;
+	private int idAuteur;
+	private int idGroupe;
 	private List<Message> messages;
 
 	public Ticket() {
@@ -30,13 +23,13 @@ public class Ticket {
 	/**
 	 * @param id
 	 * @param titre
-	 * @param auteur
+	 * @param idAuteur
 	 */
-	public Ticket(int id, String titre, Utilisateur auteur) {
+	public Ticket(int id, String titre, int idAuteur) {
 		super();
 		this.id = id;
 		this.titre = titre;
-		this.auteur = auteur;
+		this.idAuteur = idAuteur;
 		this.messages = new LinkedList<Message>();
 	}
 
@@ -71,33 +64,33 @@ public class Ticket {
 	}
 
 	/**
-	 * @return the auteur
+	 * @return the idAuteur
 	 */
-	public Utilisateur getAuteur() {
-		return auteur;
+	public int getIdAuteur() {
+		return idAuteur;
 	}
 
 	/**
-	 * @param auteur
-	 *            the auteur to set
+	 * @param idAuteur
+	 *            the idAuteur to set
 	 */
-	public void setAuteur(Utilisateur auteur) {
-		this.auteur = auteur;
+	public void setIdAuteur(int idAuteur) {
+		this.idAuteur = idAuteur;
 	}
 
 	/**
-	 * @return the groupe
+	 * @return the idGroupe
 	 */
-	public Groupe getGroupe() {
-		return groupe;
+	public int getIdGroupe() {
+		return idGroupe;
 	}
 
 	/**
-	 * @param groupe
-	 *            the groupe to set
+	 * @param idGroupe
+	 *            the idGroupe to set
 	 */
-	public void setGroupe(Groupe groupe) {
-		this.groupe = groupe;
+	public void setIdGroupe(int idGroupe) {
+		this.idGroupe = idGroupe;
 	}
 
 	/**
@@ -126,9 +119,17 @@ public class Ticket {
 	}
 
 	public void creerMessage(String corps, Utilisateur auteur) {
-		Date date = new Date(System.currentTimeMillis());
-		Message monMessage = new Message(0, corps, date.toString(), auteur);
+		Date date = new Date();
+		DateFormat shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT);
+		Message monMessage = new Message(0, corps, shortDateFormat.format(date), auteur, StatutMessage.PAS_RECU_SERVEUR, this.id);
 		messages.add(monMessage);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Ticket " + id + "," + titre + "," + idAuteur + "," + idGroupe;
+	}
 }

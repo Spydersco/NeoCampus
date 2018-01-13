@@ -8,17 +8,8 @@ import messages.Ticket;
 
 public class Groupe {
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Groupe " + id + "," + nom;
-	}
-
 	private int id;
 	private String nom;
-	private List<Utilisateur> membres;
 	private List<Ticket> tickets;
 
 	public Groupe() {
@@ -33,7 +24,6 @@ public class Groupe {
 		super();
 		this.id = id;
 		this.nom = nom;
-		this.membres = new LinkedList<Utilisateur>();
 		this.tickets = new LinkedList<Ticket>();
 	}
 
@@ -66,22 +56,7 @@ public class Groupe {
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
-
-	/**
-	 * @return the membres
-	 */
-	public List<Utilisateur> getMembres() {
-		return membres;
-	}
-
-	/**
-	 * @param membres
-	 *            the membres to set
-	 */
-	public void setMembres(List<Utilisateur> membres) {
-		this.membres = membres;
-	}
-
+	
 	/**
 	 * @return the tickets
 	 */
@@ -96,16 +71,6 @@ public class Groupe {
 	public void setTickets(List<Ticket> tickets) {
 		this.tickets = tickets;
 	}
-
-	public void addMembres(Utilisateur... utilisateurs) {
-		for (Utilisateur u : utilisateurs)
-			this.membres.add(u);
-	}
-
-	public void removeMembres(Utilisateur... utilisateurs) {
-		for (Utilisateur u : utilisateurs)
-			this.membres.remove(u);
-	}
 	
 	public void addTicket(Ticket... tickets) {
 		for (Ticket t : tickets)
@@ -119,9 +84,17 @@ public class Groupe {
 
 	public void creerTicket(String titre, String corps, Utilisateur auteur) {
 		int id = tickets.size();
-		Ticket ticket = new Ticket(id, titre, auteur);
+		Ticket ticket = new Ticket(id, titre, this.id);
 		tickets.add(ticket);
 		ticket.creerMessage(corps, auteur);
+	}
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Groupe " + id + "," + nom;
 	}
 
 }

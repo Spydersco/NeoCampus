@@ -17,6 +17,7 @@ public class Utilisateur {
 	private String nom;
 	private String prenom;
 	private String motDePasse;
+	private TypeUtilisateur type;
 	private List<Ticket> tickets = new LinkedList<>();
 	private List<Groupe> groupes = new LinkedList<>();
 
@@ -29,12 +30,14 @@ public class Utilisateur {
 	 * @param nom
 	 * @param prenom
 	 * @param motDePasse
+	 * @param type
 	 */
-	public Utilisateur(int id, String nom, String prenom, String motDePasse) {
+	public Utilisateur(int id, String nom, String prenom, String motDePasse, TypeUtilisateur type) {
 		this.id = id;
 		this.nom = nom;
 		this.prenom = prenom;
 		this.motDePasse = motDePasse;
+		this.type = type;
 	}
 
 	/**
@@ -98,6 +101,20 @@ public class Utilisateur {
 	}
 
 	/**
+	 * @return the type
+	 */
+	public TypeUtilisateur getType() {
+		return type;
+	}
+
+	/**
+	 * @param type the type to set
+	 */
+	public void setType(TypeUtilisateur type) {
+		this.type = type;
+	}
+
+	/**
 	 * @return the tickets
 	 */
 	public List<Ticket> getTickets() {
@@ -151,7 +168,7 @@ public class Utilisateur {
 	 */
 	@Override
 	public String toString() {
-		return "Utilisateur " + id + "," + nom + "," + prenom + "," + motDePasse;
+		return "Utilisateur " + id + "," + nom + "," + prenom + "," + motDePasse + "," + type;
 	}
 	
 	

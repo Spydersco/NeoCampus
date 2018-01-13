@@ -26,13 +26,6 @@ public class GroupeDAO extends DAO<Groupe> {
 			prepare.setInt(1, obj.getId());
 			prepare.setString(2, obj.getNom());
 			prepare.executeUpdate();
-			for(Utilisateur membre : obj.getMembres()) {
-				prepare = this.connect
-					.prepareStatement("INSERT INTO Appartenir (grp_id, uti_id) VALUES(?, ?)");
-				prepare.setInt(1, obj.getId());
-				prepare.setInt(2, membre.getId());
-				prepare.executeUpdate();
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -57,13 +50,6 @@ public class GroupeDAO extends DAO<Groupe> {
 			res.updateInt(1, obj.getId());
 			res.updateString(2, obj.getNom());
 			res.updateRow();
-			for(Utilisateur membre : obj.getMembres()) {
-				res = this.connect
-					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery("INSERT INTO Appartenir (grp_id, uti_id) VALUES(?, ?)");
-				res.updateInt(1, obj.getId());
-				res.updateInt(2, membre.getId());
-				res.updateRow();
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -72,7 +58,6 @@ public class GroupeDAO extends DAO<Groupe> {
 	@Override
 	public Groupe find(int id) {
 		Groupe groupe = new Groupe();
-		UtilisateurDAO utilisateurDAO = new UtilisateurDAO(connect);
 		TicketDAO ticketDAO = new TicketDAO(connect);
 		try {
 			ResultSet result = this.connect
@@ -80,10 +65,6 @@ public class GroupeDAO extends DAO<Groupe> {
 					.executeQuery("SELECT * FROM Groupe WHERE grp_id = " + id);
 			if (result.next())
 				groupe = new Groupe(id, result.getString("grp_nom"));
-			result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeQuery("SELECT * FROM Appartenir WHERE grp_id = " + id);
-			while (result.next())
-				groupe.addMembres(utilisateurDAO.find(result.getInt("uti_id")));
 			result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery("SELECT * FROM Ticket WHERE tic_groupe = " + id);
 			while (result.next())

@@ -4,18 +4,12 @@ import utilisateurs.Utilisateur;
 
 public class Message {
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Message " + id + "," + corps + "," + date + "," + auteur;
-	}
-
 	private int id;
 	private String corps;
 	private String date;
 	private Utilisateur auteur;
+	private StatutMessage statut;
+	private int idTicket;
 
 	public Message() {
 
@@ -26,13 +20,17 @@ public class Message {
 	 * @param corps
 	 * @param date
 	 * @param auteur
+	 * @param statut
+	 * @param idTicket
 	 */
-	public Message(int id, String corps, String date, Utilisateur auteur) {
+	public Message(int id, String corps, String date, Utilisateur auteur, StatutMessage statut, int idTicket) {
 		super();
 		this.id = id;
 		this.corps = corps;
 		this.date = date;
 		this.auteur = auteur;
+		this.statut = statut;
+		this.idTicket = idTicket;
 	}
 
 	public void afficherMessage() {
@@ -98,5 +96,40 @@ public class Message {
 	public void setAuteur(Utilisateur auteur) {
 		this.auteur = auteur;
 	}
+	
+	/**
+	 * @return the statut
+	 */
+	public StatutMessage getStatut() {
+		return statut;
+	}
 
+	/**
+	 * @param statut the statut to set
+	 */
+	public void setStatut(StatutMessage statut) {
+		this.statut = statut;
+	}
+
+	/**
+	 * @return the idTicket
+	 */
+	public int getIdTicket() {
+		return idTicket;
+	}
+
+	/**
+	 * @param idTicket the idTicket to set
+	 */
+	public void setIdTicket(int idTicket) {
+		this.idTicket = idTicket;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Message " + id + "," + corps + "," + date + "," + auteur + "," + statut + "," + idTicket;
+	}
 }
