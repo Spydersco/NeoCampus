@@ -36,8 +36,10 @@ public class Client {
 //			System.out.println(in.readLine());
 
 			ObjectOutputStream oos = new ObjectOutputStream(socket.getSoc().getOutputStream());
+			oos.flush();
 			ObjectInputStream ois = new ObjectInputStream(socket.getSoc().getInputStream());
-			oos.writeObject(new Integer(2134));
+			int[] test = {1, 2, 3};
+			oos.writeObject(test);
 			oos.flush();
 			
 		} catch (IOException e) {

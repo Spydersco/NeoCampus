@@ -41,9 +41,10 @@ public class Login implements Runnable{
 //			out.println(verifierIdentifiants(login, mdp));
 //			out.flush();
 	
-			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+//			ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+//			oos.flush();
 			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-			Integer s = (Integer) ois.readObject();
+			int[] s = (int[]) ois.readObject();
 			ois.close();
 		} 
 		catch (IOException | ClassNotFoundException e) {

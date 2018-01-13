@@ -146,5 +146,4 @@ public class Utilisateur {
 			this.groupes.remove(groupe);
 	}
 	
-	
 }

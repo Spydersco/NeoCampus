@@ -46,7 +46,7 @@ public class SocketClient {
 	}
 
 	public void envoiMessage(String corps, Ticket ticket, Utilisateur auteur) {
-		Message leMessage = new Message(0, corps, "", StatutMessage.PAS_RECU_SERVEUR, auteur);
+		Message leMessage = new Message(0, corps, "", auteur);
 		try {
 			oos.writeObject("salut a tous les amis");
 			oos.flush();
