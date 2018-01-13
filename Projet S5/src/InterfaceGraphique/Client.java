@@ -10,6 +10,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeSelectionModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.JTextArea;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -45,25 +46,25 @@ public class Client {
 		Groupe groupe3 = new Groupe(3, "TP41");
 		listGroupes.add(groupe3);
 		
-		Utilisateur Joshua = new Utilisateur("User1", "Allo", "Salort", "Joshua", TypeUtilisateur.CAMPUS);
-		Utilisateur Damien = new Utilisateur("User2", "Allo", "Raufaste", "Damien", TypeUtilisateur.CAMPUS);
+		Utilisateur Damien = new Utilisateur("User1", "Allo", "Raufaste", "Damien", TypeUtilisateur.CAMPUS);
+		Utilisateur Joshua = new Utilisateur("User2", "Allo", "Salort", "Joshua", TypeUtilisateur.CAMPUS);
 		Utilisateur Sebastien = new Utilisateur("User3", "Allo", "Niarfeix", "Sebastien", TypeUtilisateur.CAMPUS);
 
-		Message message1Groupe1 = new Message(1, "Probleme dans la salle U3 105", new Date(), Joshua, Statut.GRIS);
-		FilDeDiscussion discussion1Groupe1 = new FilDeDiscussion(1, "probleme", groupe1, message1Groupe1, Joshua);
-		Message message2Groupe1 = new Message(2, "Gros probleme dans la salle U2 115", new Date(), Joshua, Statut.GRIS);
-		FilDeDiscussion discussion2Groupe1 = new FilDeDiscussion(2, "Gros probleme", groupe1, message2Groupe1, Joshua);
-		Message message3Groupe1 = new Message(3, "Aucun problème", new Date(), Joshua, Statut.GRIS);
-		FilDeDiscussion discussion3Groupe1 = new FilDeDiscussion(3, "Tout va bien", groupe1, message3Groupe1, Joshua);
+		Message message1Groupe1 = new Message(1, "Probleme dans la salle U3 105", new Date(), Damien, Statut.GRIS);
+		FilDeDiscussion discussion1Groupe1 = new FilDeDiscussion(1, "probleme", groupe1, message1Groupe1, Damien);
+		Message message2Groupe1 = new Message(2, "Gros probleme dans la salle U2 115", new Date(), Damien, Statut.GRIS);
+		FilDeDiscussion discussion2Groupe1 = new FilDeDiscussion(2, "Gros probleme", groupe1, message2Groupe1, Damien);
+		Message message3Groupe1 = new Message(3, "Aucun problème", new Date(), Damien, Statut.GRIS);
+		FilDeDiscussion discussion3Groupe1 = new FilDeDiscussion(3, "Tout va bien", groupe1, message3Groupe1, Damien);
 		
 		groupe1.ajouterDiscussion(discussion1Groupe1);
 		groupe1.ajouterDiscussion(discussion2Groupe1);
 		groupe1.ajouterDiscussion(discussion3Groupe1);
 
-		Message message1Groupe2 = new Message(4, "L'ordinateur salle U3 115 fume", new Date(), Damien, Statut.GRIS);
-		FilDeDiscussion discussion1Groupe2 = new FilDeDiscussion(4, "Probleme ordinateur", groupe2, message1Groupe2, Damien);
-		Message message2Groupe2 = new Message(5, "L'ordinateur qui fumé a mis feu à la salle", new Date(), Damien, Statut.GRIS);
-		FilDeDiscussion discussion2Groupe2 = new FilDeDiscussion(5, "Feu dans une salle", groupe2, message2Groupe2, Damien);
+		Message message1Groupe2 = new Message(4, "L'ordinateur salle U3 115 fume", new Date(), Joshua, Statut.GRIS);
+		FilDeDiscussion discussion1Groupe2 = new FilDeDiscussion(4, "Probleme ordinateur", groupe2, message1Groupe2, Joshua);
+		Message message2Groupe2 = new Message(5, "L'ordinateur qui fumé a mis feu à la salle", new Date(), Joshua, Statut.GRIS);
+		FilDeDiscussion discussion2Groupe2 = new FilDeDiscussion(5, "Feu dans une salle", groupe2, message2Groupe2, Joshua);
 		groupe2.ajouterDiscussion(discussion1Groupe2);
 		groupe2.ajouterDiscussion(discussion2Groupe2);
 
@@ -88,6 +89,7 @@ public class Client {
 		frame.getContentPane().add(scrollPane);
 		
 		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setBorder(BorderFactory.createTitledBorder(""));
 		lblNewLabel.setBounds(216, 13, 582, 14);
 		frame.getContentPane().add(lblNewLabel);
 		
