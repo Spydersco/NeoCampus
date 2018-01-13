@@ -145,6 +145,14 @@ public class Utilisateur {
 		for (Groupe groupe : groupes)
 			this.groupes.remove(groupe);
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Utilisateur " + id + "," + nom + "," + prenom + "," + motDePasse;
+	}
 	
 	
 }

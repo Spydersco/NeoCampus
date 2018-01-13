@@ -4,6 +4,14 @@ import utilisateurs.Utilisateur;
 
 public class Message {
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Message " + id + "," + corps + "," + date + "," + auteur;
+	}
+
 	private int id;
 	private String corps;
 	private String date;

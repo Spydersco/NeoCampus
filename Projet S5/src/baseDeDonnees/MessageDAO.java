@@ -27,12 +27,12 @@ public class MessageDAO extends DAO<Message> {
 	public void create(Message obj) {
 		try {
 			PreparedStatement prepare = this.connect.prepareStatement(
-					"INSERT INTO Message (msg_id, msg_corps, msg_date, msg_statut, msg_auteur) VALUES(?, ?, ?, ?, ?)");
+					"INSERT INTO Message (msg_id, msg_corps, msg_date, msg_auteur) VALUES(?, ?, ?, ?)");
 
 			prepare.setInt(1, obj.getId());
 			prepare.setString(2, obj.getCorps());
 			prepare.setString(3, obj.getDate());
-			prepare.setInt(5, obj.getAuteur().getId());
+			prepare.setInt(4, obj.getAuteur().getId());
 			prepare.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

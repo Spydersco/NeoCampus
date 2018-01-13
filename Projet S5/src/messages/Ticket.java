@@ -9,6 +9,14 @@ import utilisateurs.*;
 
 public class Ticket {
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Ticket " + id + "," + titre + "," + auteur + "," + groupe;
+	}
+
 	private int id;
 	private String titre;
 	private Utilisateur auteur;

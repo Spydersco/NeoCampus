@@ -8,6 +8,14 @@ import messages.Ticket;
 
 public class Groupe {
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Groupe " + id + "," + nom;
+	}
+
 	private int id;
 	private String nom;
 	private List<Utilisateur> membres;

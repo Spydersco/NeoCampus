@@ -3,6 +3,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import baseDeDonnees.GestionBaseDeDonnee;
+import baseDeDonnees.UtilisateurDAO;
+import utilisateurs.Utilisateur;
+
 /**
  * @author Damien
  *
@@ -26,8 +30,14 @@ public class Test {
 			e.printStackTrace();
 		}
 
+		GestionBaseDeDonnee gbd = new GestionBaseDeDonnee(connexion);
+		UtilisateurDAO uDAO = new UtilisateurDAO(connexion);
+		gbd.EffacerBaseDeDonnées();
+		gbd.afficherGroupes();
+		gbd.afficherGroupes();
+		gbd.afficherTickets();
+		gbd.afficherUtilisateurs();
 		Statement statement = connexion.createStatement();
-
 		statement.executeQuery("SHUTDOWN");
 		statement.close();
 
