@@ -29,7 +29,7 @@ public class Ticket {
 		this.id = id;
 		this.titre = titre;
 		this.auteur = auteur;
-		this.messages = new LinkedList<>();
+		this.messages = new LinkedList<Message>();
 	}
 
 	/**
