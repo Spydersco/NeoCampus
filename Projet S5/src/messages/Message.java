@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import utilisateurs.Groupe;
 import utilisateurs.Utilisateur;
 
 public class Message implements Serializable{
@@ -18,7 +17,7 @@ public class Message implements Serializable{
 	private String date;
 	private Utilisateur auteur;
 	private StatutMessage statut;
-	private List<Utilisateur> lecteurs = new LinkedList<>();
+	private List<Integer> lecteurs = new LinkedList<>();
 	private int idTicket;
 
 	public Message() {
@@ -50,8 +49,15 @@ public class Message implements Serializable{
 	/**
 	 * @param lecteurs the lecteurs to set
 	 */
-	public void setLecteurs(List<Utilisateur> lecteurs) {
+	public void setLecteurs(List<Integer> lecteurs) {
 		this.lecteurs = lecteurs;
+	}
+
+	/**
+	 * @return the lecteurs
+	 */
+	public List<Integer> getLecteurs() {
+		return lecteurs;
 	}
 
 	/**
