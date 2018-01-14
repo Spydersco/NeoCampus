@@ -1,16 +1,22 @@
 package utilisateurs;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 import utilisateurs.Utilisateur;
 import messages.Ticket;
 
-public class Groupe {
+public class Groupe implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1252809006326797359L;
 	private int id;
 	private String nom;
 	private List<Ticket> tickets;
+	private int nbMembres;
 
 	public Groupe() {
 
@@ -25,6 +31,21 @@ public class Groupe {
 		this.id = id;
 		this.nom = nom;
 		this.tickets = new LinkedList<Ticket>();
+		this.nbMembres = 0;
+	}
+
+	/**
+	 * @return the nbMembres
+	 */
+	public int getNbMembres() {
+		return nbMembres;
+	}
+
+	/**
+	 * @param nbMembres the nbMembres to set
+	 */
+	public void setNbMembres(int nbMembres) {
+		this.nbMembres = nbMembres;
 	}
 
 	/**
@@ -84,7 +105,7 @@ public class Groupe {
 
 	public void creerTicket(String titre, String corps, Utilisateur auteur) {
 		int id = tickets.size();
-		Ticket ticket = new Ticket(id, titre, this.id);
+		Ticket ticket = new Ticket(id, titre, auteur.getId(), this.id);
 		tickets.add(ticket);
 		ticket.creerMessage(corps, auteur);
 	}
