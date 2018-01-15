@@ -122,8 +122,10 @@ public class GestionBaseDeDonnee {
 
 	public void effacerBaseDeDonnées() {
 		try {
+			connect.createStatement().executeQuery("DELETE FROM Lire");
 			connect.createStatement().executeQuery("DELETE FROM Message");
 			connect.createStatement().executeQuery("DELETE FROM Ticket");
+			connect.createStatement().executeQuery("DELETE FROM Appartenir");
 			connect.createStatement().executeQuery("DELETE FROM Utilisateur");
 			connect.createStatement().executeQuery("DELETE FROM Groupe");
 		} catch (SQLException e) {
