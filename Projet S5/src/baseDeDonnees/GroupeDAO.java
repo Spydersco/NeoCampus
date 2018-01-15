@@ -65,7 +65,7 @@ public class GroupeDAO extends DAO<Groupe> {
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery("SELECT * FROM Groupe WHERE grp_id = " + id);
 			if (result.next())
-				groupe = new Groupe(id, result.getString("grp_nom"));
+				groupe = new Groupe(id, result.getString("grp_nom"), result.getInt("grp_nbMembres"));
 			result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery("SELECT * FROM Ticket WHERE tic_groupe = " + id);
 			while (result.next())

@@ -62,14 +62,13 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 	@Override
 	public void update(Utilisateur obj) {
 		try {
-			ResultSet res = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
-					.executeQuery("SELECT * FROM Utilisateur WHERE uti_id = " + obj.getId());
-			res.updateInt(1, obj.getId());
-			res.updateString(2, obj.getNom());
-			res.updateString(3, obj.getPrenom());
-			res.updateString(4, obj.getMotDePasse());
-			res.updateString(5, obj.getType().name());
-			res.updateRow();
+			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
+			.executeUpdate("UPDATE Utilisateur SET " 
+					+ "uti_nom = '" + obj.getNom() + "', " 
+					+ "uti_prenom = '" + obj.getPrenom() + "', " 
+					+ "uti_motDePasse = '" + obj.getMotDePasse() + "', " 
+					+ "uti_type = '" + obj.getType().name() + "' " 
+					+ "WHERE uti_id = " + obj.getId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -59,6 +59,11 @@ public class Message implements Serializable{
 	public List<Integer> getLecteurs() {
 		return lecteurs;
 	}
+	
+	public void addLecteur(Integer...lecteurs) {
+		for(Integer lecteur : lecteurs)
+			this.lecteurs.add(lecteur);
+	}	
 
 	/**
 	 * @return the id

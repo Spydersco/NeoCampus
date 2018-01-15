@@ -25,13 +25,14 @@ public class Groupe implements Serializable{
 	/**
 	 * @param id
 	 * @param nom
+	 * @param nbMembres
 	 */
-	public Groupe(int id, String nom) {
+	public Groupe(int id, String nom, int nbMembres) {
 		super();
 		this.id = id;
 		this.nom = nom;
 		this.tickets = new LinkedList<Ticket>();
-		this.nbMembres = 0;
+		this.nbMembres = nbMembres;
 	}
 
 	/**
