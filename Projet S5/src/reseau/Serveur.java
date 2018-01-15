@@ -14,7 +14,6 @@ public class Serveur {
 		Connection connect = null;
 
 		try {
-			System.out.println("Demarrage du serveur ...");
 			socket = new ServerSocket(2018);
 			Class.forName("org.hsqldb.jdbcDriver").newInstance();
 			String url = "jdbc:hsqldb:file:NeoCampus";

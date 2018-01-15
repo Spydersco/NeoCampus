@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import messages.Message;
 import messages.StatutMessage;
 import messages.Ticket;
+import utilisateurs.Groupe;
 import utilisateurs.Utilisateur;
 
 public class SocketClient {
@@ -17,6 +18,7 @@ public class SocketClient {
 	public SocketClient () {
 		try {
 			this.soc = new Socket("localHost", 2018);
+			this.oos = new ObjectOutputStream(soc.getOutputStream());
 		} catch (UnknownHostException e) {
 			System.err.println("Connexion impossible à l'adresse " + soc.getLocalAddress());
 		} catch (IOException e) {
@@ -31,11 +33,10 @@ public class SocketClient {
 		return soc;
 	}
 
-	public void demandeCreationTicket(String titre, String premierMessage, Utilisateur auteur) {
+	public void demandeCreationTicket(Groupe grp, String titre, String premierMessage, Utilisateur auteur) {
 		Ticket leTicket = new Ticket(0, titre, auteur);
 		leTicket.creerMessage(premierMessage, auteur);
 		try {
-			oos = new ObjectOutputStream(soc.getOutputStream());
 			oos.writeObject(leTicket);
 			oos.flush();
 		} catch (IOException e) {
@@ -47,8 +48,7 @@ public class SocketClient {
 	public void envoiMessage(String corps, Ticket ticket, Utilisateur auteur) {
 		Message leMessage = new Message(0, corps, "", StatutMessage.PAS_RECU_SERVEUR, auteur);
 		try {
-			oos = new ObjectOutputStream(soc.getOutputStream());
-			oos.writeObject(leMessage);
+			oos.writeObject("salut a tous les amis");
 			oos.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
