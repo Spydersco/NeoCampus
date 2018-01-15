@@ -80,7 +80,7 @@ public class Reception implements Runnable{
 		Message message = (Message) objet;
 		message.afficherMessage();
 		message.setId(gestionBD.idMessageSuivant());
-		message.setStatut(StatutMessage.PAS_RECU_GROUPE);
+		message.setStatut(StatutMessage.PAS_TOUS_LU);
 		gestionBD.getMessageDAO().create(message);
 	}
 

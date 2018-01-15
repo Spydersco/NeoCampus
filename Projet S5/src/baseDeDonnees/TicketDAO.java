@@ -27,7 +27,7 @@ public class TicketDAO extends DAO<Ticket> {
 	public void create(Ticket obj) {
 		try {
 			PreparedStatement prepare = this.connect.prepareStatement(
-					"INSERT INTO ticket (tic_id, tic_titre, tic_groupe) VALUES(?, ?)");
+					"INSERT INTO ticket (tic_id, tic_titre, tic_auteur, tic_groupe) VALUES(?, ?)");
 
 			prepare.setInt(1, obj.getId());
 			prepare.setString(2, obj.getTitre());
@@ -43,6 +43,8 @@ public class TicketDAO extends DAO<Ticket> {
 	public void delete(Ticket obj) {
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
+					.executeQuery("DELETE FROM Message WHERE msg_ticket = "+ obj.getId());
+			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
 					.executeUpdate("DELETE FROM Ticket WHERE tic_id = " + obj.getId());
 
 		} catch (SQLException e) {
@@ -53,11 +55,12 @@ public class TicketDAO extends DAO<Ticket> {
 	@Override
 	public void update(Ticket obj) {
 		try {
-			ResultSet res = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
-					.executeQuery("SELECT * FROM Ticket WHERE tic_id = " + obj.getId());
-			res.updateInt(1, obj.getId());
-			res.updateString(2, obj.getTitre());
-			res.updateInt(3, obj.getIdGroupe());
+			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
+			.executeUpdate("UPDATE Ticket SET " 
+					+ "tic_titre = '" + obj.getTitre() + "', " 
+					+ "tic_auteur = '" + obj.getIdAuteur() + "', " 
+					+ "tic_groupe = '" + obj.getIdGroupe() + "' " 
+					+ "WHERE tic_id = " + obj.getId());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
