@@ -27,7 +27,7 @@ public class TicketDAO extends DAO<Ticket> {
 	public void create(Ticket obj) {
 		try {
 			PreparedStatement prepare = this.connect.prepareStatement(
-					"INSERT INTO ticket (tic_id, tic_titre, tic_auteur, tic_groupe) VALUES(?, ?)");
+					"INSERT INTO ticket (tic_id, tic_titre, tic_auteur, tic_groupe) VALUES(?, ?, ?, ?)");
 
 			prepare.setInt(1, obj.getId());
 			prepare.setString(2, obj.getTitre());
