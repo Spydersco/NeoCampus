@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import utilisateurs.Groupe;
-import utilisateurs.Utilisateur;
 
 public class GroupeDAO extends DAO<Groupe> {
 
@@ -21,10 +20,11 @@ public class GroupeDAO extends DAO<Groupe> {
 	public void create(Groupe obj) {
 		try {
 			PreparedStatement prepare = this.connect
-					.prepareStatement("INSERT INTO Groupe (grp_id, grp_nom) VALUES(?, ?)");
+					.prepareStatement("INSERT INTO Groupe (grp_id, grp_nom, grp_nbMembres) VALUES(?, ?, ?)");
 
 			prepare.setInt(1, obj.getId());
 			prepare.setString(2, obj.getNom());
+			prepare.setInt(3, obj.getNbMembres());
 			prepare.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -49,6 +49,7 @@ public class GroupeDAO extends DAO<Groupe> {
 					.executeQuery("SELECT * FROM Groupe WHERE grp_id = " + obj.getId());
 			res.updateInt(1, obj.getId());
 			res.updateString(2, obj.getNom());
+			res.updateInt(3, obj.getNbMembres());
 			res.updateRow();
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
+import java.util.concurrent.Semaphore;
 
 public class AccepterConnexion implements Runnable{
 
@@ -19,13 +20,14 @@ public class AccepterConnexion implements Runnable{
     }
 
 	public void run() {
-
+		Semaphore mutex = new Semaphore(1);
+		Semaphore sem = new Semaphore(0);
+		int nbrClient = 0;
 		try {
 			while (true) {
-				System.out.println("toto");
 				socket = socketserver.accept();
 				System.out.println("Un client veut se connecter  ");
-				t1 = new Thread(new Login(socket, connect));
+				t1 = new Thread(new Login(socket, connect, nbrClient, mutex, sem));
 				t1.start();
 			}
 		} 

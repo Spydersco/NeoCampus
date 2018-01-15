@@ -31,7 +31,8 @@ public class TicketDAO extends DAO<Ticket> {
 
 			prepare.setInt(1, obj.getId());
 			prepare.setString(2, obj.getTitre());
-			prepare.setInt(3, obj.getIdGroupe());
+			prepare.setInt(3, obj.getIdAuteur());
+			prepare.setInt(4, obj.getIdGroupe());
 			prepare.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -71,7 +72,7 @@ public class TicketDAO extends DAO<Ticket> {
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery("SELECT * FROM Ticket WHERE tic_id = " + id);
 			if (result.next())
-				ticket = new Ticket(id, result.getString("tic_titre"), result.getInt("tic_groupe"));
+				ticket = new Ticket(id, result.getString("tic_titre"), result.getInt("tic_auteur"), result.getInt("tic_groupe"));
 			result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery("SELECT * FROM Message WHERE msg_ticket = " + id);

@@ -1,14 +1,23 @@
 package messages;
 
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
+
 import utilisateurs.Utilisateur;
 
-public class Message {
+public class Message implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3903918310813787931L;
 	private int id;
 	private String corps;
 	private String date;
 	private Utilisateur auteur;
 	private StatutMessage statut;
+	private List<Integer> lecteurs = new LinkedList<>();
 	private int idTicket;
 
 	public Message() {
@@ -35,6 +44,20 @@ public class Message {
 
 	public void afficherMessage() {
 		System.out.println(this.corps);
+	}
+
+	/**
+	 * @param lecteurs the lecteurs to set
+	 */
+	public void setLecteurs(List<Integer> lecteurs) {
+		this.lecteurs = lecteurs;
+	}
+
+	/**
+	 * @return the lecteurs
+	 */
+	public List<Integer> getLecteurs() {
+		return lecteurs;
 	}
 
 	/**

@@ -7,10 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import utilisateurs.TypeUtilisateur;
 import utilisateurs.Utilisateur;
-import utilisateurs.Groupe;
 
 /**
  * @author Damien
@@ -37,12 +35,6 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 			prepare.setString(4, obj.getMotDePasse());
 			prepare.setString(5, obj.getType().name());
 			prepare.executeUpdate();
-			for (Groupe groupe : obj.getGroupes()) {
-				prepare = this.connect.prepareStatement("INSERT INTO Appartenir (grp_id, uti_id) VALUES(?, ?)");
-				prepare.setInt(1, groupe.getId());
-				prepare.setInt(2, obj.getId());
-				prepare.executeUpdate();
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -52,14 +44,14 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 	public void delete(Utilisateur obj) {
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
-					.executeQuery("DELETE FROM Ticket WHERE tic_auteur = " + obj.getId());
-
+			.executeQuery("DELETE FROM Ticket WHERE tic_auteur = " + obj.getId());
+			
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
-					.executeQuery("DELETE FROM Message WHERE msg_auteur = " + obj.getId());
-
+			.executeQuery("DELETE FROM Message WHERE msg_auteur = " + obj.getId());
+						
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
-					.executeQuery("DELETE FROM Appartenir WHERE uti_id = " + obj.getId());
-
+			.executeQuery("DELETE FROM Appartenir WHERE uti_id = " + obj.getId());
+			
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
 					.executeUpdate("DELETE FROM Utilisateur WHERE uti_id = " + obj.getId());
 		} catch (SQLException e) {
@@ -70,10 +62,14 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 	@Override
 	public void update(Utilisateur obj) {
 		try {
-			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
-					.executeUpdate("UPDATE Utilisateur SET " + "uti_nom = '" + obj.getNom() + "', " + "uti_prenom = '"
-							+ obj.getPrenom() + "', " + "uti_motDePasse = '" + obj.getMotDePasse() + "', "
-							+ "uti_type = '" + obj.getType().name() + "' " + "WHERE uti_id = " + obj.getId());
+			ResultSet res = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
+					.executeQuery("SELECT * FROM Utilisateur WHERE uti_id = " + obj.getId());
+			res.updateInt(1, obj.getId());
+			res.updateString(2, obj.getNom());
+			res.updateString(3, obj.getPrenom());
+			res.updateString(4, obj.getMotDePasse());
+			res.updateString(5, obj.getType().name());
+			res.updateRow();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -93,8 +89,7 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 						result.getString("uti_motDePasse"), TypeUtilisateur.valueOf(result.getString("uti_type")));
 			}
 			result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeQuery(
-							"SELECT * FROM Ticket INNER JOIN Appartenir ON Ticket.tic_groupe = Appartenir.grp_id");
+					.executeQuery("SELECT * FROM Ticket INNER JOIN Appartenir ON Ticket.tic_groupe = Appartenir.grp_id");
 			while (result.next())
 				utilisateur.addTicket(ticketDAO.find(result.getInt("tic_id")));
 			result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
