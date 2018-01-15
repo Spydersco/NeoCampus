@@ -4,8 +4,13 @@
 package baseDeDonnees;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import utilisateurs.Groupe;
+import utilisateurs.TypeUtilisateur;
+import utilisateurs.Utilisateur;
 
 /**
  * @author Damien
@@ -25,6 +30,42 @@ public class GestionBaseDeDonnee {
 		this.ticketDAO = new TicketDAO(connect);
 		this.utilisateurDAO = new UtilisateurDAO(connect);
 	}
+
+	/**
+	 * @return the groupeDAO
+	 */
+	public GroupeDAO getGroupeDAO() {
+		return groupeDAO;
+	}
+
+
+
+	/**
+	 * @return the messageDAO
+	 */
+	public MessageDAO getMessageDAO() {
+		return messageDAO;
+	}
+
+
+
+	/**
+	 * @return the ticketDAO
+	 */
+	public TicketDAO getTicketDAO() {
+		return ticketDAO;
+	}
+
+
+
+	/**
+	 * @return the utilisateurDAO
+	 */
+	public UtilisateurDAO getUtilisateurDAO() {
+		return utilisateurDAO;
+	}
+
+
 
 	public void afficherGroupes() {
 		try {
@@ -71,66 +112,143 @@ public class GestionBaseDeDonnee {
 		}
 	}
 	
-	public void EffacerBaseDeDonnées() {
+	public void executerRequete(String requete) {
+		try {
+			connect.createStatement().executeQuery(requete);
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void effacerBaseDeDonnées() {
 		try {
 			connect.createStatement().executeQuery("DELETE FROM Message");
 			connect.createStatement().executeQuery("DELETE FROM Ticket");
 			connect.createStatement().executeQuery("DELETE FROM Utilisateur");
 			connect.createStatement().executeQuery("DELETE FROM Groupe");
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public int idGroupeSuivant () {
+
+	public int idGroupeSuivant() {
 		try {
 			ResultSet res = connect.createStatement().executeQuery("SELECT * FROM Groupe");
-			int compteur = 1;
-			while(res.next())
-				compteur++;
-			return compteur;
-		}catch(SQLException e) {
+			int max = 0;
+			while(res.next()) {
+				int id = res.getInt("grp_id");
+				if (id > max)
+					max = id;
+			}
+			return max+1;
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return 0;
 		}
 	}
-	
-	public int idMessageSuivant () {
+
+	public int idMessageSuivant() {
 		try {
 			ResultSet res = connect.createStatement().executeQuery("SELECT * FROM Message");
-			int compteur = 1;
-			while(res.next())
-				compteur++;
-			return compteur;
-		}catch(SQLException e) {
+			int max = 0;
+			while(res.next()) {
+				int id = res.getInt("msg_id");
+				if (id > max)
+					max = id;
+			}
+			return max+1;
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return 0;
 		}
 	}
-		
-	public int idTicketSuivant () {
+
+	public int idTicketSuivant() {
 		try {
 			ResultSet res = connect.createStatement().executeQuery("SELECT * FROM Ticket");
-			int compteur = 1;
-			while(res.next())
-				compteur++;
-			return compteur;
-		}catch(SQLException e) {
+			int max = 0;
+			while(res.next()) {
+				int id = res.getInt("tic_id");
+				if (id > max)
+					max = id;
+			}
+			return max+1;
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return 0;
+		}
+	}
+
+	public int idUtilisateurSuivant() {
+		try {
+			ResultSet res = connect.createStatement().executeQuery("SELECT * FROM Utilisateur");
+			int max = 0;
+			while(res.next()) {
+				int id = res.getInt("uti_id");
+				if (id > max)
+					max = id;
+			}
+			return max+1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	public void supprimerUtilisateur(int id) {
+		UtilisateurDAO uDAO = new UtilisateurDAO(connect);
+		Utilisateur utilisateur = uDAO.find(id);
+		utilisateur.setPrenom("Utilisateur");
+		utilisateur.setNom("supprimé");
+		utilisateur.setMotDePasse(null);
+		uDAO.update(utilisateur);
+	}
+
+	public void creerUtilisateur(String prenom, String nom, String motDePasse, TypeUtilisateur type) {
+		UtilisateurDAO uDAO = new UtilisateurDAO(connect);
+		uDAO.create(new Utilisateur(idUtilisateurSuivant(), prenom, nom, motDePasse, type));
+	}
+
+	public void creerGroupe(String nom) {
+		GroupeDAO gDAO = new GroupeDAO(connect);
+		gDAO.create(new Groupe(idGroupeSuivant(), nom, 0));
+	}
+
+	public void supprimerGroupe(int id) {
+		GroupeDAO gDAO = new GroupeDAO(connect);
+		gDAO.delete(gDAO.find(id));
+	}
+
+	public void ajouterMembre(int idGroupe, int idMembre) {
+		try {
+			PreparedStatement prepare = connect
+					.prepareStatement("INSERT INTO Appartenir (grp_id, uti_id) VALUES (?, ?)");
+			prepare.setInt(1, idGroupe);
+			prepare.setInt(2, idMembre);
+			prepare.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void supprimerMembre(int idGroupe, int idMembre) {
+		try {
+			connect.createStatement()
+					.executeQuery("DELETE FROM Appartenir WHERE grp_id = " + idGroupe + "AND uti_id = " + idMembre);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 	
-	public int idUtilisateurSuivant () {
+	public void addLecteur (int idMessage, int idLecteur) {
 		try {
-			ResultSet res = connect.createStatement().executeQuery("SELECT * FROM Utilisateur");
-			int compteur = 1;
-			while(res.next())
-				compteur++;
-			return compteur;
+			PreparedStatement prepare = connect
+					.prepareStatement("INSERT INTO Lire (msg_id, uti_id) VALUES (?, ?)");
+			prepare.setInt(1, idMessage);
+			prepare.setInt(2, idLecteur);
+			prepare.executeUpdate();
 		}catch(SQLException e) {
 			e.printStackTrace();
-			return 0;
 		}
 	}
 }
