@@ -15,7 +15,7 @@ public class Message implements Serializable{
 	private int id;
 	private String corps;
 	private String date;
-	private Utilisateur auteur;
+	private int idAuteur;
 	private StatutMessage statut;
 	private List<Integer> lecteurs = new LinkedList<>();
 	private int idTicket;
@@ -32,12 +32,12 @@ public class Message implements Serializable{
 	 * @param statut
 	 * @param idTicket
 	 */
-	public Message(int id, String corps, String date, Utilisateur auteur, StatutMessage statut, int idTicket) {
+	public Message(int id, String corps, String date, int idAuteur, StatutMessage statut, int idTicket) {
 		super();
 		this.id = id;
 		this.corps = corps;
 		this.date = date;
-		this.auteur = auteur;
+		this.idAuteur = idAuteur;
 		this.statut = statut;
 		this.idTicket = idTicket;
 	}
@@ -113,8 +113,8 @@ public class Message implements Serializable{
 	/**
 	 * @return the auteur
 	 */
-	public Utilisateur getAuteur() {
-		return auteur;
+	public int getAuteur() {
+		return idAuteur;
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class Message implements Serializable{
 	 *            the auteur to set
 	 */
 	public void setAuteur(Utilisateur auteur) {
-		this.auteur = auteur;
+		this.idAuteur = idAuteur;
 	}
 	
 	/**
@@ -158,6 +158,6 @@ public class Message implements Serializable{
 	 */
 	@Override
 	public String toString() {
-		return "Message " + id + "," + corps + "," + date + "," + auteur + "," + statut + "," + idTicket;
+		return "Message " + id + "," + corps + "," + date + "," + idAuteur + "," + statut + "," + idTicket;
 	}
 }

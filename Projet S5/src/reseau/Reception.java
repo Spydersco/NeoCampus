@@ -6,6 +6,7 @@ import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.sql.Connection;
+import java.util.ListIterator;
 import java.util.concurrent.Semaphore;
 
 import baseDeDonnees.GestionBaseDeDonnee;
@@ -13,13 +14,14 @@ import messages.Message;
 import messages.StatutMessage;
 import messages.Ticket;
 
-public class Reception implements Runnable{
+public class Reception implements Runnable {
 
 	private Socket socket;
 	private int idClient;
 	private int nbClient;
 	private ObjectInput oi = null;
 	private Semaphore sem;
+	private Semaphore read;
 	private GestionBaseDeDonnee gestionBD;
 
 	/**
@@ -28,37 +30,70 @@ public class Reception implements Runnable{
 	 * @param connect
 	 * @param sem
 	 */
-	public Reception(Socket socket, int idClient, int nbClient, Connection connect, Semaphore sem) {
+	public Reception(Socket socket, int idClient, int nbClient, Connection connect, Semaphore read, Semaphore sem) {
 		super();
 		this.socket = socket;
 		this.idClient = idClient;
 		this.nbClient = nbClient;
 		this.sem = sem;
+		this.read = read;
 		this.gestionBD = new GestionBaseDeDonnee(connect);
 	}
 
 	public void run() {
 
-		while (true) {
-			try {
-				oi = new ObjectInputStream(socket.getInputStream());
-				Object objet = oi.readObject();
-				if(objet.getClass() == Message.class) {
-					receptionMessage(objet);
+		try {
+			while (true) {
+				try {
+					oi = new ObjectInputStream(socket.getInputStream());
+					Object objet = oi.readObject();
+					read.acquire();
+					if(objet.getClass() == Message.class) {
+						receptionMessage(objet);
+					}
+					else if(objet.getClass() == Ticket.class){
+						receptionTicket(objet);
+					}
+					else {
+						autre(objet);
+					}
+					read.release();
+					sem.release(nbClient);
 				}
-				else {
-					receptionTicket(objet);
-				}
-				sem.release(nbClient);
-			} catch (EOFException e) {
-				break;
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				catch (EOFException e) {
+						break;
+				} 
 			}
 		}
+		catch (IOException | InterruptedException | ClassNotFoundException e){
+			e.printStackTrace();
+		}
 		
+	}
+
+	private void autre(Object objet) {
+		int id = (int) objet;
+		Message msg = gestionBD.getMessageDAO().find(id);
+		Ticket tck = gestionBD.getTicketDAO().find(msg.getIdTicket());
+		boolean trouve = false;
+		// recherche message
+		for (ListIterator<Message> it = tck.getMessages().listIterator(); it.hasNext();) {
+			Message curr = it.next();
+			if (curr.getStatut() == StatutMessage.PAS_TOUS_LU) {
+				// recherche lecteur
+				for (ListIterator<Integer> it2 = curr.getLecteurs().listIterator(); it.hasNext() && !trouve;) {
+					if (it2.next().intValue() == idClient) {
+						trouve = true;
+					}
+				}
+				if (!trouve) {
+					curr.getLecteurs().add(idClient);
+					if (curr.getLecteurs().size() == gestionBD.getGroupeDAO().find(tck.getIdGroupe()).getNbMembres()) {
+						curr.setStatut(StatutMessage.TOUS_LU);
+					}
+				}
+			}
+		}
 	}
 
 	/**

@@ -34,12 +34,6 @@ public class GroupeDAO extends DAO<Groupe> {
 	@Override
 	public void delete(Groupe obj) {
 		try {
-			TicketDAO tDAO = new TicketDAO(connect);
-			ResultSet res = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeQuery("SELECT * FROM Ticket WHERE tic_groupe = "+ obj.getId());
-			while(res.next()) {
-				tDAO.delete(tDAO.find(res.getInt("tic_id")));
-			}
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
 					.executeUpdate("DELETE FROM Groupe WHERE grp_id = " + obj.getId());
 
@@ -48,7 +42,6 @@ public class GroupeDAO extends DAO<Groupe> {
 		}
 	}
 
-	@Override
 	public void update(Groupe obj) {
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)

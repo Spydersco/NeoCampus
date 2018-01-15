@@ -34,7 +34,7 @@ public class MessageDAO extends DAO<Message> {
 			prepare.setString(2, obj.getCorps());
 			prepare.setString(3, obj.getDate());
 			prepare.setString(4, obj.getStatut().name());
-			prepare.setInt(5, obj.getAuteur().getId());
+			prepare.setInt(5, obj.getAuteur());
 			prepare.setInt(6, obj.getIdTicket());
 			prepare.executeUpdate();
 		} catch (SQLException e) {
@@ -60,7 +60,7 @@ public class MessageDAO extends DAO<Message> {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
 					.executeUpdate("UPDATE Message SET " + "msg_corps = '" + obj.getCorps() + "', " + "msg_date = '"
 							+ obj.getDate() + "', " + "msg_statut = '" + obj.getStatut().name() + "', "
-							+ "msg_auteur = '" + obj.getAuteur().getId() + "', " + "msg_idTicket = '"
+							+ "msg_auteur = '" + obj.getAuteur()+ "', " + "msg_idTicket = '"
 							+ obj.getIdTicket() + "', " + "WHERE msg_id = " + obj.getId());
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -77,7 +77,7 @@ public class MessageDAO extends DAO<Message> {
 					.executeQuery("SELECT * FROM Message WHERE msg_id = " + id);
 			if (result.next())
 				message = new Message(id, result.getString("msg_corps"), result.getString("msg_date"),
-						utilisateurDAO.find(result.getInt("msg_auteur")),
+						result.getInt("msg_auteur"),
 						StatutMessage.valueOf(result.getString("msg_statut")), result.getInt("msg_ticket"));
 			result = this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery("SELECT * FROM Lire WHERE msg_id = " + id);

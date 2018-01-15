@@ -25,7 +25,6 @@ public class Groupe implements Serializable{
 	/**
 	 * @param id
 	 * @param nom
-	 * @param nbMembres
 	 */
 	public Groupe(int id, String nom, int nbMembres) {
 		super();
@@ -116,7 +115,7 @@ public class Groupe implements Serializable{
 	 */
 	@Override
 	public String toString() {
-		return "Groupe " + id + "," + nom;
+		return "Groupe " + id + "," + nom + "," + nbMembres;
 	}
 
 }

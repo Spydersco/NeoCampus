@@ -21,13 +21,14 @@ public class AccepterConnexion implements Runnable{
 
 	public void run() {
 		Semaphore mutex = new Semaphore(1);
+		Semaphore mutex_read = new Semaphore(1);
 		Semaphore sem = new Semaphore(0);
 		int nbrClient = 0;
 		try {
 			while (true) {
 				socket = socketserver.accept();
 				System.out.println("Un client veut se connecter  ");
-				t1 = new Thread(new Login(socket, connect, nbrClient, mutex, sem));
+				t1 = new Thread(new Login(socket, connect, nbrClient, mutex, mutex_read, sem));
 				t1.start();
 			}
 		} 
