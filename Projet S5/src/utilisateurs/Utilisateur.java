@@ -3,6 +3,7 @@
  */
 package utilisateurs;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,7 +13,13 @@ import messages.Ticket;
  * @author Damien
  *
  */
-public class Utilisateur {
+public class Utilisateur implements Serializable{
+	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4930936992312303932L;
 	private int id;
 	private String nom;
 	private String prenom;
@@ -154,8 +161,9 @@ public class Utilisateur {
 	}
 	
 	public void addGroupe(Groupe... groupes) {
-		for (Groupe groupe : groupes)
+		for (Groupe groupe : groupes) {
 			this.groupes.add(groupe);
+		}
 	}
 
 	public void removeGroupe(Groupe... groupes) {
@@ -168,8 +176,10 @@ public class Utilisateur {
 	 */
 	@Override
 	public String toString() {
-		return "Utilisateur " + id + "," + nom + "," + prenom + "," + motDePasse + "," + type;
+		return "Utilisateur [id=" + id + ", nom=" + nom + ", prenom=" + prenom + ", motDePasse=" + motDePasse
+				+ ", type=" + type + ", tickets=" + tickets + ", groupes=" + groupes + "]";
 	}
-	
+
+
 	
 }

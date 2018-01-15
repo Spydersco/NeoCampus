@@ -122,7 +122,6 @@ public class GestionBaseDeDonnee {
 
 	public void effacerBaseDeDonnées() {
 		try {
-			connect.createStatement().executeQuery("DELETE FROM Lire");
 			connect.createStatement().executeQuery("DELETE FROM Message");
 			connect.createStatement().executeQuery("DELETE FROM Ticket");
 			connect.createStatement().executeQuery("DELETE FROM Appartenir");
@@ -227,6 +226,9 @@ public class GestionBaseDeDonnee {
 					.prepareStatement("INSERT INTO Appartenir (grp_id, uti_id) VALUES (?, ?)");
 			prepare.setInt(1, idGroupe);
 			prepare.setInt(2, idMembre);
+			Groupe g = groupeDAO.find(idGroupe);
+			g.setNbMembres(g.getNbMembres()+1);
+			groupeDAO.update(g);
 			prepare.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -17,15 +17,17 @@ public class Login implements Runnable {
 	private boolean logged;
 	private int idClient;
 	private Semaphore mutex;
+	private Semaphore mutex_read;
 	private Semaphore sem;
 	private int nbrClient;
 
-	public Login(Socket s, Connection connect, int nbrClient, Semaphore mutex, Semaphore sem) {
+	public Login(Socket s, Connection connect, int nbrClient, Semaphore mutex, Semaphore mutex_read, Semaphore sem) {
 		this.socket = s;
 		this.connect = connect;
 		this.logged = false;
 		this.nbrClient = nbrClient;
 		this.mutex = mutex;
+		this.mutex_read = mutex_read;
 		this.sem = sem;
 	}
 
@@ -37,12 +39,7 @@ public class Login implements Runnable {
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 
 			while (!logged) {
-				out.println("Entrez votre login :");
-				out.flush();
 				this.idClient = Integer.parseInt(in.readLine());
-
-				out.println("Entrez votre mdp :");
-				out.flush();
 				String mdp = in.readLine();
 				System.out.println(mdp);
 				logged = verifierIdentifiants(mdp);
@@ -58,7 +55,7 @@ public class Login implements Runnable {
 		incrementerClient();
 
 		new Thread(new Emission(socket, idClient, connect, sem)).start();
-		new Thread(new Reception(socket, idClient, nbrClient, connect, sem)).start();
+		new Thread(new Reception(socket, idClient, nbrClient, connect, mutex_read, sem)).start();
 	}
 
 	private void incrementerClient() {

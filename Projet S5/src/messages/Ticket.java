@@ -1,5 +1,6 @@
 package messages;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -8,8 +9,12 @@ import java.util.List;
 import messages.Message;
 import utilisateurs.*;
 
-public class Ticket {
+public class Ticket implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2976968391653307366L;
 	private int id;
 	private String titre;
 	private int idAuteur;
@@ -123,7 +128,7 @@ public class Ticket {
 	public void creerMessage(String corps, Utilisateur auteur) {
 		Date date = new Date();
 		DateFormat shortDateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT);
-		Message monMessage = new Message(0, corps, shortDateFormat.format(date), auteur, StatutMessage.PAS_RECU_SERVEUR, this.id);
+		Message monMessage = new Message(0, corps, shortDateFormat.format(date), auteur.getId(), StatutMessage.PAS_RECU_SERVEUR, this.id);
 		messages.add(monMessage);
 	}
 
@@ -132,6 +137,9 @@ public class Ticket {
 	 */
 	@Override
 	public String toString() {
-		return "Ticket " + id + "," + titre + "," + idAuteur + "," + idGroupe;
+		return "Ticket [id=" + id + ", titre=" + titre + ", idAuteur=" + idAuteur + ", idGroupe=" + idGroupe
+				+ ", messages=" + messages + "]";
 	}
+
+
 }
