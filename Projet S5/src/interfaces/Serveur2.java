@@ -5,10 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +21,11 @@ import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import baseDeDonnees.GestionBaseDeDonnee;
 import utilisateurs.Groupe;
 import utilisateurs.TypeUtilisateur;
@@ -32,8 +34,11 @@ import utilisateurs.Utilisateur;
 //import com.mysql.jdbc.PreparedStatement;
 import javax.swing.JComboBox;
 
-public class Serveur2 {
-	private JFrame frame;
+public class Serveur2 extends JFrame{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	// SQL
 	private Connection connect = null;
@@ -42,9 +47,8 @@ public class Serveur2 {
 	private List<JButton> btnUsers = new ArrayList<>();
 	private JTextField txtNomUtilisateur;
 	private JTextField txtPrenomUtilisateur;
-	private JTextField txtIDUtilisateur;
 	private JTextField txtMDPUtilisateur;
-	private JComboBox<?> typeUtilisateur;
+	private JComboBox<TypeUtilisateur> typeUtilisateur;
 	private JButton btnModifierUtilisateur = new JButton("Modifier");
 	private JButton btnSupprimerUtilisateur = new JButton("Supprimer");
 	private JButton btnAjouterUtilisateur = new JButton("Ajouter");
@@ -72,34 +76,32 @@ public class Serveur2 {
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	public Serveur2() throws SQLException {
-		Connection connexion = null;
+	public Serveur2() throws SQLException{
 		try {
 			Class.forName("org.hsqldb.jdbcDriver").newInstance();
 			String url = "jdbc:hsqldb:file:NeoCampus";
 			String user = "sa";
 			String passwd = "";
-			connexion = (Connection) DriverManager.getConnection(url, user, passwd);
+			connect = (Connection) DriverManager.getConnection(url, user, passwd);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		GestionBaseDeDonnee gbd = new GestionBaseDeDonnee(connect);
+		
+		users = gbd.getUtilisateurs();
+		groupes = gbd.getGroupes();
 
 		initialize();
-		Statement statement = connexion.createStatement();
-		statement.executeQuery("SHUTDOWN");
-		statement.close();
+		
 	}
 
 	public void raz() {
 		txtNomUtilisateur.setText("");
-		txtNomUtilisateur.setEditable(false);
 		txtPrenomUtilisateur.setText("");
-		txtPrenomUtilisateur.setEditable(false);
 		txtMDPUtilisateur.setText("");
-		txtMDPUtilisateur.setEditable(false);
-		typeUtilisateur.setSelectedItem(0);
-		typeUtilisateur.setEditable(false);
+		typeUtilisateur.setSelectedIndex(0);
 		typeUtilisateur.repaint();
 		btnModifierUtilisateur.setEnabled(false);
 		btnSupprimerUtilisateur.setEnabled(false);
@@ -111,7 +113,7 @@ public class Serveur2 {
 		Iterator<Utilisateur> iterateur = users.iterator();
 		while (!trouve && iterateur.hasNext()) {
 			Utilisateur user = iterateur.next();
-			if (boutonChoisi.getText().compareTo(user.getPrenom() + "" + user.getNom()) == 0) {
+			if (boutonChoisi.getText().compareTo(user.getPrenom() + " " + user.getNom()) == 0) {
 				userChoisi = user;
 				trouve = true;
 			}
@@ -123,7 +125,7 @@ public class Serveur2 {
 			txtNomUtilisateur.setEditable(true);
 			txtPrenomUtilisateur.setText(userChoisi.getPrenom());
 			txtPrenomUtilisateur.setEditable(true);
-			typeUtilisateur.setSelectedIndex(userChoisi.getType().ordinal());
+			typeUtilisateur.setSelectedItem(userChoisi.getType());
 		}
 		btnModifierUtilisateur.setEnabled(true);
 		btnSupprimerUtilisateur.setEnabled(true);
@@ -172,7 +174,7 @@ public class Serveur2 {
 		}
 		if (trouve) {
 
-			List<Utilisateur> listeMembres = gbd.listeMembres(groupeChoisi);
+			List<Utilisateur> listeMembres = gbd.listeMembre(groupeChoisi);
 
 			groupeBoutonMembre.clear();
 			int k = 0;
@@ -205,18 +207,15 @@ public class Serveur2 {
 
 	private void initialize() {
 		GestionBaseDeDonnee gbd = new GestionBaseDeDonnee(connect);
-		users = gbd.getUtilisateurs();
-		groupes = gbd.getGroupes();
-		frame = new JFrame();
-		frame.setBounds(1200, 900, 1200, 900);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(false);
-		frame.getContentPane().setLayout(null);
 
+		this.setBounds(1200, 900, 1200, 900);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(false);
+		this.getContentPane().setLayout(null);
 		// Creation du panel contenant les deux onglets (Utilisateur et groupe)
 		JTabbedPane onglets = new JTabbedPane(JTabbedPane.TOP);
 		onglets.setBounds(10, 11, 1174, 849);
-		frame.getContentPane().add(onglets);
+		this.getContentPane().add(onglets);
 
 		// Panel permettant l'affichage de l'interface de l'onglet utilisateur
 		JPanel panelUtilisateur = new JPanel();
@@ -233,7 +232,7 @@ public class Serveur2 {
 		lblNomUtilisateur.setBounds(400, 171, 90, 15);
 		txtNomUtilisateur = new JTextField();
 		txtNomUtilisateur.setBounds(329, 197, 180, 20);
-		txtNomUtilisateur.setEditable(false);
+
 		panelUtilisateur.add(lblNomUtilisateur);
 		panelUtilisateur.add(txtNomUtilisateur);
 
@@ -242,36 +241,25 @@ public class Serveur2 {
 		lblPrenomUtilisateur.setBounds(577, 171, 90, 15);
 		txtPrenomUtilisateur = new JTextField();
 		txtPrenomUtilisateur.setBounds(519, 197, 180, 20);
-		txtPrenomUtilisateur.setEditable(false);
 		panelUtilisateur.add(lblPrenomUtilisateur);
 		panelUtilisateur.add(txtPrenomUtilisateur);
 
-		// Label et zone de saisie du champ Id de l'utilisateur
-		JLabel lblIdUtilisateur = new JLabel("Identifiant");
-		lblIdUtilisateur.setBounds(381, 228, 90, 15);
-		txtIDUtilisateur = new JTextField();
-		txtIDUtilisateur.setBounds(329, 243, 180, 20);
-		txtIDUtilisateur.setEditable(false);
-		panelUtilisateur.add(lblIdUtilisateur);
-		panelUtilisateur.add(txtIDUtilisateur);
-
 		// Label et zone de saisie du champ Mot de passe de l'utilisateur
 		JLabel lblMDPUtilisateur = new JLabel("Mot de passe");
-		lblMDPUtilisateur.setBounds(577, 228, 90, 15);
+		lblMDPUtilisateur.setBounds(429, 225, 180, 15);
 		txtMDPUtilisateur = new JTextField();
-		txtMDPUtilisateur.setBounds(519, 243, 180, 20);
-		txtMDPUtilisateur.setEditable(false);
+		txtMDPUtilisateur.setBounds(429, 243, 180, 20);
 		panelUtilisateur.add(lblMDPUtilisateur);
 		panelUtilisateur.add(txtMDPUtilisateur);
 
 		// Label et zone de saisie du type d'utilisateur
 		JLabel lblTypeUtilisateur = new JLabel("Type utilisateur");
-		lblTypeUtilisateur.setBounds(474, 272, 89, 14);
+		lblTypeUtilisateur.setBounds(429, 289, 153, 20);
 		panelUtilisateur.add(lblTypeUtilisateur);
-		String[] types = { "", TypeUtilisateur.AGENT.name(), TypeUtilisateur.UTILISATEUR.name() };
-		typeUtilisateur = new JComboBox<String>(types);
-		typeUtilisateur.setEnabled(false);
-		typeUtilisateur.setBounds(419, 297, 180, 20);
+		typeUtilisateur = new JComboBox<>();
+		typeUtilisateur.addItem(TypeUtilisateur.AGENT);
+		typeUtilisateur.addItem(TypeUtilisateur.UTILISATEUR);
+		typeUtilisateur.setBounds(429, 324, 180, 20);
 		panelUtilisateur.add(typeUtilisateur);
 
 		// Bouton supprimer utilisateur
@@ -289,11 +277,11 @@ public class Serveur2 {
 				}
 				panelListeUtilisateurs.repaint();
 				btnUsers.remove(btnUtilisateur);
-				gbd.getUtilisateurDAO().delete(gbd.getUtilisateurDAO().find(userChoisi.getId()));
+				gbd.supprimerUtilisateur(userChoisi.getId());
 				afficherBoutonsUtilisateur();
 			}
 		});
-		btnSupprimerUtilisateur.setBounds(264, 440, 101, 23);
+		btnSupprimerUtilisateur.setBounds(264, 440, 147, 23);
 		panelUtilisateur.add(btnSupprimerUtilisateur);
 
 		// Bouton Modifier Utilisateur
@@ -301,20 +289,35 @@ public class Serveur2 {
 		btnModifierUtilisateur.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!(txtNomUtilisateur.getText().isEmpty() || txtPrenomUtilisateur.getText().isEmpty()
-						|| txtIDUtilisateur.getText().isEmpty() || txtMDPUtilisateur.getText().isEmpty()
-						|| (typeUtilisateur.getSelectedIndex() == 0))) {
-					gbd.getUtilisateurDAO()
-							.update(new Utilisateur(userChoisi.getId(), txtNomUtilisateur.getText(),
+						 || txtMDPUtilisateur.getText().isEmpty())) {
+					Utilisateur userModif = new Utilisateur(userChoisi.getId(), txtNomUtilisateur.getText(),
 									txtPrenomUtilisateur.getText(), txtMDPUtilisateur.getText(),
-									TypeUtilisateur.valueOf(typeUtilisateur.getSelectedItem().toString())));
+									TypeUtilisateur.valueOf(typeUtilisateur.getSelectedItem().toString()));
+					JButton btnUtilisateur = null;
+					for (JButton button : btnUsers) {
+						if (button.getText().equals(userChoisi.getPrenom() + " " + userChoisi.getNom())) {
+							btnUtilisateur = button;
+						}
+					}
+					panelListeUtilisateurs.remove(btnUtilisateur);
+					btnUtilisateur.setText(userModif.getPrenom() + " " + userModif.getNom());
+					panelListeUtilisateurs.add(btnUtilisateur);
+					users.remove(gbd.getUtilisateurDAO().find(userChoisi.getId()));
+					gbd.getUtilisateurDAO().update(userModif);
+					users.add(userModif);
+					raz();
+					afficherBoutonsUtilisateur();
+					panelListeUtilisateurs.repaint();
+					panelListeUtilisateurs.revalidate();
 				}
 			}
 		});
 
-		btnModifierUtilisateur.setBounds(264, 406, 89, 23);
+		btnModifierUtilisateur.setBounds(264, 406, 147, 23);
 		panelUtilisateur.add(btnModifierUtilisateur);
 
 		// Création des boutons Utilisateurs
+		int i = 0;
 		for (Iterator<Utilisateur> iterator = users.iterator(); iterator.hasNext();) {
 			Utilisateur user = iterator.next();
 			btnUsers.add(new JButton(user.getPrenom() + " " + user.getNom()));
@@ -323,6 +326,7 @@ public class Serveur2 {
 					ajouterBoutonUtilisateur(e);
 				}
 			});
+			i++;
 		}
 		afficherBoutonsUtilisateur();
 
@@ -333,16 +337,15 @@ public class Serveur2 {
 		panelUtilisateur.add(scrollUtilisateurs);
 
 		// Bouton Creer Utilisateur
-		btnAjouterUtilisateur.setEnabled(false);
 		btnAjouterUtilisateur.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (txtNomUtilisateur.getText().isEmpty() || txtPrenomUtilisateur.getText().isEmpty()
-						|| txtMDPUtilisateur.getText().isEmpty() || (typeUtilisateur.getSelectedIndex() == 0)) {
-				} else {
+				if (!(txtNomUtilisateur.getText().isEmpty() || txtPrenomUtilisateur.getText().isEmpty()
+						|| txtMDPUtilisateur.getText().isEmpty())) {
 					Utilisateur nouvelUtilisateur = new Utilisateur(gbd.idUtilisateurSuivant(),
 							txtNomUtilisateur.getText(), txtPrenomUtilisateur.getText(), txtMDPUtilisateur.getText(),
 							TypeUtilisateur.valueOf(typeUtilisateur.getSelectedItem().toString()));
 					gbd.getUtilisateurDAO().create(nouvelUtilisateur);
+					users.add(nouvelUtilisateur);
 					JButton boutonNouvelUtilisateur = new JButton(
 							txtPrenomUtilisateur.getText() + " " + txtNomUtilisateur.getText());
 					raz();
@@ -355,15 +358,16 @@ public class Serveur2 {
 					boutonNouvelUtilisateur.setMinimumSize(new Dimension(180, 25));
 					boutonNouvelUtilisateur.setPreferredSize(new Dimension(180, 25));
 					boutonNouvelUtilisateur.setAlignmentX(Component.CENTER_ALIGNMENT);
+					
 					btnUsers.add(boutonNouvelUtilisateur);
 					panelListeUtilisateurs.add(boutonNouvelUtilisateur);
-
 					panelListeUtilisateurs.repaint();
-					btnAjouterUtilisateur.setEnabled(false);
+					panelListeUtilisateurs.revalidate();
+					afficherBoutonsUtilisateur();
 				}
 			}
 		});
-		btnAjouterUtilisateur.setBounds(264, 372, 89, 23);
+		btnAjouterUtilisateur.setBounds(264, 372, 147, 23);
 		panelUtilisateur.add(btnAjouterUtilisateur);
 
 		// Panel permettant l'affichage de l'interface de l'onglet Groupe
@@ -379,10 +383,9 @@ public class Serveur2 {
 		panelListeGroupes.setLayout(null);
 
 		JLabel lblNomDuGroupe = new JLabel("Nom du groupe");
-		lblNomDuGroupe.setBounds(320, 70, 90, 15);
+		lblNomDuGroupe.setBounds(302, 70, 147, 26);
 		panelGroupe.add(lblNomDuGroupe);
 		txtNomGroupe = new JTextField();
-		txtNomGroupe.setEditable(false);
 		txtNomGroupe.setBounds(470, 70, 180, 20);
 		panelGroupe.add(txtNomGroupe);
 
@@ -421,7 +424,7 @@ public class Serveur2 {
 		panelListeUtilisateursNonPresent.setLayout(null);
 
 		btnSupprimerGroupe.setEnabled(false);
-		btnSupprimerGroupe.setBounds(684, 86, 100, 20);
+		btnSupprimerGroupe.setBounds(684, 86, 131, 20);
 		btnSupprimerGroupe.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -454,28 +457,22 @@ public class Serveur2 {
 					panelListeGroupes.add(btnGroupes.get(i));
 				}
 				panelListeGroupes.repaint();
-
-				txtNomGroupe.setText("");
-				txtNomGroupe.setEditable(false);
-				btnSupprimerGroupe.setEnabled(false);
-				btnModifierGroupe.setEnabled(false);
 			}
 		});
 		panelGroupe.add(btnSupprimerGroupe);
 
 		btnModifierGroupe.setEnabled(false);
-		btnModifierGroupe.setBounds(684, 55, 100, 20);
+		btnModifierGroupe.setBounds(684, 55, 131, 20);
 		btnModifierGroupe.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gbd.getGroupeDAO().update(new Groupe(groupeChoisi.getId(), txtNomGroupe.getText(),
-						gbd.getGroupeDAO().find(groupeChoisi.getId()).getNbMembres()));
+							gbd.getGroupeDAO().find(groupeChoisi.getId()).getNbMembres()));
 			}
 		});
 		panelGroupe.add(btnModifierGroupe);
-
 		btnAjouterGroupe.setEnabled(false);
-		btnAjouterGroupe.setBounds(684, 24, 100, 20);
+		btnAjouterGroupe.setBounds(684, 24, 131, 20);
 		btnAjouterGroupe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!txtNomGroupe.getText().isEmpty()) {
@@ -496,7 +493,7 @@ public class Serveur2 {
 			}
 		});
 		panelGroupe.add(btnAjouterGroupe);
-		
+		i=0;
 		for (Iterator<Groupe> iterateur = groupes.iterator(); iterateur.hasNext();) {
 			Groupe groupe = iterateur.next();
 			btnGroupes.add(new JButton(groupe.getNom()));
@@ -507,6 +504,7 @@ public class Serveur2 {
 			});
 			btnGroupes.get(i).setBounds(10, 11 + (i * 35), 90, 20);
 			panelListeGroupes.add(btnGroupes.get(i));
+			i++;
 		}
 		btnSupprimerGroupe.setEnabled(true);
 		btnModifierGroupe.setEnabled(true);
@@ -522,14 +520,19 @@ public class Serveur2 {
 				}
 
 				if (!membresChoisis.isEmpty()) {
-
-					for (JRadioButton radio : groupeBoutonMembre) {
+					List<Utilisateur> membres = gbd.getMembres(groupeChoisi);
+					for (JRadioButton radio : groupeBoutonMembre) 
 						panelListeMembres.remove(radio);
-					}
-
+					
 					for (JRadioButton radio : membresChoisis) {
 						groupeBoutonMembre.remove(radio);
 						groupeBoutonUtilisateursNonPresent.add(radio);
+						Utilisateur membre = null;
+						for(Utilisateur u : membres) {
+							if(u.getPrenom()+" "+u.getNom() == radio.getText())
+								membre = u;
+						}
+						gbd.supprimerMembre(groupeChoisi.getId(), membre.getId());
 					}
 
 					for (int k = 0; k < groupeBoutonMembre.size(); k++) {
@@ -548,7 +551,7 @@ public class Serveur2 {
 				}
 			}
 		});
-		btnSupprimerMembres.setBounds(299, 90, 123, 60);
+		btnSupprimerMembres.setBounds(291, 90, 138, 60);
 		panelMembresPresent.add(btnSupprimerMembres);
 
 		btnAjouterMembres.setEnabled(false);
@@ -569,8 +572,14 @@ public class Serveur2 {
 					for (JRadioButton radio : membresChoisis) {
 						groupeBoutonUtilisateursNonPresent.remove(radio);
 						groupeBoutonMembre.add(radio);
+						Utilisateur membre = null;
+						for(Utilisateur u : users) {
+							if(u.getPrenom()+" "+u.getNom() == radio.getText())
+								membre = u;
+						}
+						gbd.ajouterMembre(groupeChoisi.getId(), membre.getId());
 					}
-
+					
 					for (int k = 0; k < groupeBoutonUtilisateursNonPresent.size(); k++) {
 						groupeBoutonUtilisateursNonPresent.get(k).setBounds(6, 5 + (k * 30), 110, 20);
 						panelListeUtilisateursNonPresent.add(groupeBoutonUtilisateursNonPresent.get(k));
@@ -589,5 +598,17 @@ public class Serveur2 {
 		});
 		btnAjouterMembres.setBounds(299, 90, 123, 60);
 		panelUtilisateurNonPresent.add(btnAjouterMembres);
+		this.addWindowStateListener(new WindowAdapter(){
+		    public void windowClosing()
+		    {
+		    	try {
+			    	Statement statement = connect.createStatement();
+					statement.executeQuery("SHUTDOWN");
+					statement.close();
+		    	}catch (SQLException e) {
+		    		e.printStackTrace();
+		    	}
+		    }
+		});
 	}
 }

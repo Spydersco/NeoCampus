@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
 
 import utilisateurs.Groupe;
 import utilisateurs.TypeUtilisateur;
@@ -112,6 +114,49 @@ public class GestionBaseDeDonnee {
 		}
 	}
 	
+	public List<Utilisateur> getUtilisateurs () {
+		List<Utilisateur> utilisateurs = new LinkedList<>();
+		
+		try {
+			ResultSet res = connect.createStatement().executeQuery("SELECT * FROM Utilisateur WHERE NOT uti_nom = 'supprimé'");
+			while (res.next()) {
+				utilisateurs.add(utilisateurDAO.find(res.getInt(1)));
+			}
+			return utilisateurs;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return utilisateurs;
+		}
+	}
+	
+	public List<Groupe> getGroupes() {
+		List<Groupe> groupes = new LinkedList<>();
+		try {
+			ResultSet res = connect.createStatement().executeQuery("SELECT * FROM Groupe");
+			while (res.next()) {
+				groupes.add(groupeDAO.find(res.getInt(1)));
+			}
+			return groupes;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return groupes;
+		}
+	}
+	
+	public List<Utilisateur> getMembres(Groupe groupe){
+		List<Utilisateur> membres = new LinkedList<>();
+		try {
+			ResultSet res = connect.createStatement().executeQuery("SELECT * FROM Appartenir WHERE grp_id = " + groupe.getId());
+			while (res.next()) {
+				membres.add(utilisateurDAO.find(res.getInt("uti_id")));
+			}
+			return membres;
+		}catch (SQLException e) {
+			e.printStackTrace();
+			return membres;
+		}
+	}
+	
 	public void executerRequete(String requete) {
 		try {
 			connect.createStatement().executeQuery(requete);
@@ -122,6 +167,7 @@ public class GestionBaseDeDonnee {
 
 	public void effacerBaseDeDonnées() {
 		try {
+			connect.createStatement().executeQuery("DELETE FROM Lire");
 			connect.createStatement().executeQuery("DELETE FROM Message");
 			connect.createStatement().executeQuery("DELETE FROM Ticket");
 			connect.createStatement().executeQuery("DELETE FROM Appartenir");
@@ -226,9 +272,6 @@ public class GestionBaseDeDonnee {
 					.prepareStatement("INSERT INTO Appartenir (grp_id, uti_id) VALUES (?, ?)");
 			prepare.setInt(1, idGroupe);
 			prepare.setInt(2, idMembre);
-			Groupe g = groupeDAO.find(idGroupe);
-			g.setNbMembres(g.getNbMembres()+1);
-			groupeDAO.update(g);
 			prepare.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -253,6 +296,19 @@ public class GestionBaseDeDonnee {
 			prepare.executeUpdate();
 		}catch(SQLException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public List<Utilisateur> listeMembre (Groupe groupe){
+		List<Utilisateur> listeMembres = new LinkedList<>();
+		try {
+			ResultSet res = connect.createStatement().executeQuery("SELECT * FROM Appartenir WHER grp_id = " + groupe.getId());
+			while(res.next())
+				listeMembres.add(utilisateurDAO.find(res.getInt("usr_id")));
+			return listeMembres;
+		}catch(SQLException e) {
+			e.printStackTrace();
+			return listeMembres;
 		}
 	}
 }
